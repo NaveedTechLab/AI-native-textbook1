@@ -3,8 +3,10 @@
 ## ✅ Files Prepared for Deployment
 
 ### Backend (for Railway deployment)
-- [x] `backend/Dockerfile` - Updated to use port 8001
+- [x] `backend/Dockerfile` - Updated with proper port variable expansion
+- [x] `Dockerfile` - Root-level Dockerfile for Railway detection
 - [x] `backend/railway.json` - Railway-specific configuration
+- [x] `railway.json` - Root-level Railway configuration
 - [x] `backend/main.py` - Main application (ready for deployment)
 - [x] `backend/requirements.txt` - Dependencies (ready for deployment)
 
@@ -18,6 +20,7 @@
 - [x] `DEPLOYMENT.md` - Complete deployment guide
 - [x] `DEPLOYMENT_SCRIPTS.md` - Step-by-step deployment scripts
 - [x] `DEPLOYMENT_CHECKLIST.md` - This checklist
+- [x] `REDEPLOY_BACKEND.md` - Backend redeployment guide with fixes
 
 ## 🚀 Deployment Process
 
@@ -65,9 +68,9 @@ LOG_LEVEL=info
 - **Update needed**: Replace with your Vercel deployment URL
 
 ### 3. Backend Port Configuration
-- **File**: `backend/Dockerfile`
-- **Purpose**: Ensures backend runs on the correct port
-- **Status**: Updated to use port 8001
+- **File**: `backend/Dockerfile` and root `Dockerfile`
+- **Purpose**: Ensures backend runs on the correct port with proper variable expansion
+- **Status**: Updated to properly convert $PORT to integer using Python's int() function
 
 ## ✅ Verification Steps
 
