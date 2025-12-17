@@ -12,7 +12,7 @@ This guide explains how to deploy the AI-native textbook application to Railway 
 1. **Fork this repository** to your GitHub account
 2. **Sign in to Railway** using your GitHub account
 3. **Create a new project** and select "Deploy from GitHub"
-4. **Select your forked repository**
+4. **Select your forked repository** and make sure to select the `/backend` directory as the root
 5. **Set environment variables** in Railway:
    - `OPENAI_API_KEY`: Your OpenRouter API key
    - `OPENAI_BASE_URL`: `https://openrouter.ai/api/v1`
