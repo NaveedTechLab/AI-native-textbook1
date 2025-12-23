@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+chapter_id: "ch00-introduction"
 ---
 
 # Introduction to Physical AI & Humanoid Robotics

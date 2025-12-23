@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+chapter_id: "ch01-ros2-fundamentals"
 ---
 
 # Module 1: ROS 2 Fundamentals
