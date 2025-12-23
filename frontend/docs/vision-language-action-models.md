@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+chapter_id: "ch04-vision-language-action-models"
 ---
 
 # Module 4: Vision-Language-Action Models

@@ -17,19 +17,34 @@ qdrant_api_key = os.getenv("QDRANT_API_KEY")
 collection_name = os.getenv("QDRANT_COLLECTION", "project_documents")
 
 if openrouter_api_key and openrouter_api_key != "your_openrouter_api_key_here":
-    # Initialize Qdrant client for cloud
-    if qdrant_url and qdrant_api_key and "qdrant.io" in qdrant_url:
-        qdrant_client = QdrantClient(
-            url=qdrant_url.replace(":6333", ""),  # Remove port from URL for cloud
-            api_key=qdrant_api_key,
-            prefer_grpc=False
-        )
-    else:
-        # Use local Qdrant if cloud not configured
-        qdrant_client = QdrantClient(
-            host=os.getenv("QDRANT_HOST", "localhost"),
-            port=int(os.getenv("QDRANT_PORT", 6333))
-        )
+    # Initialize Qdrant client
+    try:
+        # Check if cloud Qdrant is configured
+        qdrant_host = os.getenv("QDRANT_HOST")
+        if qdrant_api_key and qdrant_host and "qdrant.io" in qdrant_host:
+            # Use Qdrant Cloud
+            qdrant_client = QdrantClient(
+                url=qdrant_host,  # Use QDRANT_HOST which has the full URL
+                api_key=qdrant_api_key,
+                prefer_grpc=False
+            )
+        else:
+            # Use local Qdrant - extract host from URL if needed
+            if qdrant_url and qdrant_url.startswith("http"):
+                # Extract host and port from URL
+                from urllib.parse import urlparse
+                parsed = urlparse(qdrant_url)
+                host = parsed.hostname or "localhost"
+                port = parsed.port or 6333
+            else:
+                host = qdrant_url or "localhost"
+                port = int(os.getenv("QDRANT_PORT", 6333))
+
+            qdrant_client = QdrantClient(host=host, port=port)
+    except Exception as e:
+        logger.error(f"Failed to initialize Qdrant client: {str(e)}")
+        # Create a dummy client to allow service to work without Qdrant
+        qdrant_client = None
 
     # Initialize RAG service with OpenRouter
     rag_service = RAGService(openrouter_api_key, qdrant_client, collection_name)

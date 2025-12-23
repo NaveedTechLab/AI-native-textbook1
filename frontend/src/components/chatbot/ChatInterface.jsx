@@ -43,7 +43,11 @@ const ChatInterface = ({ selectedText: propSelectedText = '' }) => {
 
     try {
       // Call the backend API
-      const response = await fetch('/api/chat/query', {
+      const API_BASE = process.env.NODE_ENV === 'production'
+        ? '/api'
+        : 'http://localhost:8001/api';
+
+      const response = await fetch(`${API_BASE}/chat/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

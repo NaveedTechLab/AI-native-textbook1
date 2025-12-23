@@ -114,7 +114,33 @@ const EnhancedChatbot = ({ selectedText = '', onTextSelected }) => {
     if (!inputValue.trim() || isLoading) return;
 
     // Extract question from input (remove selected text prefix)
-    const questionText = inputValue.replace(/^Selected text:\n".*?"\n\n/, '').trim() || inputValue.trim();
+    // Handle both cases: formatted input with selected text OR direct question
+    let questionText = inputValue.trim();
+
+    // Check if input starts with "Selected text:" format
+    if (questionText.startsWith('Selected text:')) {
+      // Extract everything after the selected text quote and "Ask a question" prompt
+      const lines = questionText.split('\n');
+
+      // Find where the actual question starts (after "Ask a question about this text...")
+      let questionStartIndex = -1;
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('Ask a question about this text')) {
+          questionStartIndex = i + 1;
+          break;
+        }
+      }
+
+      // Get the actual question (everything after the prompt)
+      if (questionStartIndex > 0 && questionStartIndex < lines.length) {
+        questionText = lines.slice(questionStartIndex).join('\n').trim();
+      }
+    }
+
+    // If no question text extracted or it's empty, use the selected text as the question
+    if (!questionText || questionText === '') {
+      questionText = currentSelectedText || selectedText || '';
+    }
 
     // Use the original selected text as context
     const selectedTextForContext = currentSelectedText || selectedText || '';
@@ -124,7 +150,7 @@ const EnhancedChatbot = ({ selectedText = '', onTextSelected }) => {
       return;
     }
 
-    // Add user message to UI immediately
+    // Add user message to UI immediately (show the actual question)
     const userMessage = {
       id: Date.now(),
       text: questionText,
@@ -137,8 +163,12 @@ const EnhancedChatbot = ({ selectedText = '', onTextSelected }) => {
     setIsLoading(true);
 
     try {
-      // Call backend API
-      const response = await fetch('/api/chat', {
+      // Call backend API (use direct URL for local development, proxy for production)
+      const API_BASE = process.env.NODE_ENV === 'production'
+        ? '/api'
+        : 'http://localhost:8001/api';
+
+      const response = await fetch(`${API_BASE}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

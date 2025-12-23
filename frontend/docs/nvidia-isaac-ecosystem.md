@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+chapter_id: "ch03-nvidia-isaac-ecosystem"
 ---
 
 # Module 3: NVIDIA Isaac Ecosystem - Perception, Navigation, and Manipulation

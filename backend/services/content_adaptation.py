@@ -1,13 +1,18 @@
 from typing import Dict, Any, Optional
-import google.generativeai as genai
 import logging
+import os
+from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
 class ContentAdaptationService:
-    def __init__(self, gemini_api_key: str):
-        genai.configure(api_key=gemini_api_key)
-        self.model = genai.GenerativeModel('gemini-pro')
+    def __init__(self, gemini_api_key: str = None):
+        # Use OpenRouter as OpenAI-compatible API
+        self.client = OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL", "https://openrouter.ai/api/v1")
+        )
+        self.model_name = "meta-llama/llama-3.1-8b-instruct"  # Fast, efficient model
 
     def adapt_content(self, content: str, user_background: str, experience_level: str, chapter_id: str) -> str:
         """Adapt content based on user background and experience level"""
@@ -15,31 +20,71 @@ class ContentAdaptationService:
             # Determine adaptation instructions based on user profile
             adaptation_instructions = self._get_adaptation_instructions(user_background, experience_level, chapter_id)
 
-            # Call Gemini API to adapt the content
-            prompt = f"""You are an educational content adapter for a Physical AI & Humanoid Robotics textbook. Adapt the provided content according to these instructions: {adaptation_instructions}. Maintain the core educational value while making it appropriate for the target audience.
+            # Create learning roadmap instead of adapting full content (more practical)
+            exp_level_lower = experience_level.lower() if experience_level else 'intermediate'
 
-Original content:
-{content}
+            # Customize roadmap based on experience level
+            if exp_level_lower == 'beginner':
+                focus = "Start with fundamentals, use simple analogies, provide detailed step-by-step guidance"
+            elif exp_level_lower == 'advanced':
+                focus = "Skip basics, focus on advanced topics, optimization, and cutting-edge research"
+            else:
+                focus = "Balance theory and practice, include real-world applications"
 
-Adapted content:"""
+            prompt = f"""You are an educational content adapter for a Physical AI & Humanoid Robotics textbook.
 
-            response = self.model.generate_content(
-                prompt,
-                generation_config=genai.types.GenerationConfig(
-                    max_output_tokens=len(content) * 2,
-                    temperature=0.4,
-                )
+USER PROFILE:
+- Background: {user_background}
+- Experience Level: **{experience_level.upper()}** ({focus})
+- Chapter: {chapter_id}
+
+ADAPTATION INSTRUCTIONS: {adaptation_instructions}
+
+ORIGINAL CONTENT (first 2000 chars):
+{content[:2000]}
+
+Create a personalized learning roadmap for this **{experience_level.upper()}** learner with:
+
+1. **Key Focus Areas** (3-5 bullets) - What should they prioritize based on their {experience_level} level?
+2. **Learning Path** (numbered steps) - Adjust complexity for {experience_level} level
+3. **Practical Exercises** (2-3 exercises) - Match difficulty to {experience_level} background
+4. **Level-Specific Tips** - Advice specifically for {experience_level} learners
+
+IMPORTANT: Make clear distinctions based on experience level:
+- Beginner: Explain basics, use analogies, step-by-step instructions
+- Intermediate: Assume fundamentals known, focus on application
+- Advanced: Deep dive into optimization, research, advanced techniques
+
+Format as clear markdown with emoji headers."""
+
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {"role": "system", "content": "You are an expert educational content adapter specializing in Physical AI and Robotics."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=800,
             )
 
-            adapted_content = response.text
+            adapted_content = response.choices[0].message.content
 
             logger.info(f"Adapted content for background: {user_background}, level: {experience_level}")
             return adapted_content
 
         except Exception as e:
-            logger.error(f"Error adapting content: {str(e)}")
-            # Return original content if adaptation fails
-            return content
+            logger.error(f"Error adapting content: {str(e)}", exc_info=True)
+            # Return helpful fallback message
+            return f"""### ⚠️ Personalization Temporarily Unavailable
+
+We're working on personalizing this content for your background (**{user_background}**) and experience level (**{experience_level}**).
+
+Meanwhile, the original content below is suitable for all learners. Focus on:
+- Understanding core concepts
+- Trying code examples
+- Building hands-on projects
+
+Error details logged for review."""
 
     def _get_adaptation_instructions(self, user_background: str, experience_level: str, chapter_id: str) -> str:
         """Generate adaptation instructions based on user profile"""
@@ -53,13 +98,15 @@ Adapted content:"""
         else:
             instructions.append("Provide balanced content with both software and hardware aspects")
 
-        # Add experience level-specific instructions
-        if experience_level == 'beginner':
-            instructions.append("Use simpler explanations, more examples, and step-by-step instructions")
-        elif experience_level == 'intermediate':
-            instructions.append("Provide moderate complexity with practical applications")
-        elif experience_level == 'advanced':
-            instructions.append("Include complex examples, optimization techniques, and advanced concepts")
+        # Add experience level-specific instructions (case-insensitive)
+        exp_level_lower = experience_level.lower() if experience_level else 'intermediate'
+
+        if exp_level_lower == 'beginner':
+            instructions.append("Use simpler explanations, more examples, and step-by-step instructions. Assume no prior knowledge.")
+        elif exp_level_lower == 'intermediate':
+            instructions.append("Provide moderate complexity with practical applications. Assume basic understanding of concepts.")
+        elif exp_level_lower == 'advanced':
+            instructions.append("Include complex examples, optimization techniques, and advanced concepts. Assume strong technical background.")
         else:
             instructions.append("Use moderate complexity appropriate for mixed experience levels")
 
@@ -80,22 +127,24 @@ Adapted content:"""
         try:
             adapted_examples = []
             for example in examples:
-                prompt = f"""You are adapting educational examples for a Physical AI & Humanoid Robotics textbook. Adapt this example for a user with {user_background} background and {experience_level} experience level. Return the adapted example.
+                prompt = f"""Adapt this robotics example for a user with {user_background} background and {experience_level} experience level.
 
 Original example:
 {example}
 
-Adapted example:"""
+Provide the adapted version with relevant comments and explanations."""
 
-                response = self.model.generate_content(
-                    prompt,
-                    generation_config=genai.types.GenerationConfig(
-                        max_output_tokens=1000,
-                        temperature=0.3,
-                    )
+                response = self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[
+                        {"role": "system", "content": "You are an expert in Physical AI and Robotics education."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    temperature=0.3,
+                    max_tokens=1000,
                 )
 
-                adapted_examples.append(response.text)
+                adapted_examples.append(response.choices[0].message.content)
 
             logger.info(f"Adapted {len(examples)} examples for background: {user_background}, level: {experience_level}")
             return adapted_examples
