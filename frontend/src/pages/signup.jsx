@@ -17,24 +17,32 @@ export default function SignupPage() {
         ? '/api'
         : 'http://localhost:8001/api';
 
+      const payload = {
+        email: formData.email,
+        password: formData.password,
+        software_background: formData.softwareBackground,
+        hardware_background: formData.hardwareBackground,
+        experience_level: formData.experienceLevel || 'Intermediate'
+      };
+
+      console.log('Sending signup request:', payload);
+
       const response = await fetch(`${API_BASE}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          software_background: formData.softwareBackground,
-          hardware_background: formData.hardwareBackground,
-          experience_level: formData.experienceLevel || 'Intermediate'
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
+      console.log('Signup response:', response.status, data);
 
       if (!response.ok) {
-        throw new Error(data.detail || 'Signup failed');
+        const errorMsg = typeof data.detail === 'string'
+          ? data.detail
+          : (data.detail?.[0]?.msg || JSON.stringify(data.detail) || 'Signup failed');
+        throw new Error(errorMsg);
       }
 
       // Store JWT token

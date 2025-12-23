@@ -7,7 +7,7 @@ const SignupWithBackground = ({ onSignup }) => {
     confirmPassword: '',
     softwareBackground: '',
     hardwareBackground: '',
-    experienceLevel: ''
+    experienceLevel: 'Intermediate'
   });
   const [errors, setErrors] = useState({});
 
@@ -66,50 +66,9 @@ const SignupWithBackground = ({ onSignup }) => {
     e.preventDefault();
 
     if (validateForm()) {
-      try {
-        const response = await fetch('/api/auth/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-            software_background: formData.softwareBackground,
-            hardware_background: formData.hardwareBackground,
-            experience_level: formData.experienceLevel
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        // Store user info in localStorage (in a real app, use secure storage)
-        localStorage.setItem('user_token', data.access_token);
-        localStorage.setItem('user_id', data.user_id);
-
-        // Call the onSignup callback
-        if (onSignup) {
-          onSignup(data);
-        }
-
-        // Reset form
-        setFormData({
-          email: '',
-          password: '',
-          confirmPassword: '',
-          softwareBackground: '',
-          hardwareBackground: '',
-          experienceLevel: ''
-        });
-
-        alert('Registration successful! You can now access personalized features.');
-      } catch (error) {
-        console.error('Signup error:', error);
-        alert(`Signup failed: ${error.message}`);
+      // Just pass formData to parent - parent will handle API call
+      if (onSignup) {
+        onSignup(formData);
       }
     }
   };

@@ -16,7 +16,11 @@ const PersonalizeButton = ({ chapterId }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch('/api/auth/profile', {
+      const API_BASE = process.env.NODE_ENV === 'production'
+        ? '/api'
+        : 'http://localhost:8001/api';
+
+      const response = await fetch(`${API_BASE}/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('user_token')}`
         }
@@ -66,6 +70,11 @@ const PersonalizeButton = ({ chapterId }) => {
       }
 
       const data = await response.json();
+
+      console.log('Personalization API response:', data);
+      console.log('Original content length:', content.length);
+      console.log('Personalized content length:', data.personalized_content.length);
+      console.log('Adaptation details:', data.adaptation_details);
 
       // Store the personalized content
       setPersonalizedContent(data.personalized_content);
