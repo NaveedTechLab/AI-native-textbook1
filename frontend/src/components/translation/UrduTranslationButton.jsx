@@ -1,94 +1,155 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import useTranslation from '../../hooks/useTranslation';
+import './UrduTranslationButton.module.css';
 
-const UrduTranslationButton = ({ content, onContentChange }) => {
-  const [isTranslating, setIsTranslating] = useState(false);
-  const [isUrdu, setIsUrdu] = useState(false);
-  const [originalContent, setOriginalContent] = useState(content);
+/**
+ * Urdu Translation Button Component
+ *
+ * Provides translation functionality with:
+ * - JWT authentication check
+ * - Loading states with progress indicator
+ * - Error handling with user-friendly messages
+ * - Toggle between English and Urdu
+ * - Cache status indicator
+ *
+ * @param {string} chapterId - Chapter identifier from frontmatter
+ */
+const UrduTranslationButton = ({ chapterId }) => {
+  // Get auth token from localStorage
+  const authToken = typeof window !== 'undefined'
+    ? localStorage.getItem('user_token')
+    : null;
 
-  const toggleTranslation = async () => {
-    if (isTranslating) return;
+  const userEmail = typeof window !== 'undefined'
+    ? localStorage.getItem('user_email')
+    : null;
 
-    setIsTranslating(true);
+  // Use translation hook
+  const {
+    isUrdu,
+    loading,
+    error,
+    cached,
+    handleTranslate,
+    handleToggle
+  } = useTranslation(chapterId, authToken);
 
-    try {
-      const targetLang = isUrdu ? 'en' : 'ur';
-      const sourceLang = isUrdu ? 'ur' : 'en';
-      const textToTranslate = isUrdu ? originalContent : content;
-
-      const response = await fetch('/api/translation/translate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: textToTranslate,
-          source_lang: sourceLang,
-          target_lang: targetLang
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      // Update the content with translated version
-      if (onContentChange) {
-        onContentChange(data.translated_text);
-      }
-
-      // Toggle the state
-      setIsUrdu(!isUrdu);
-    } catch (error) {
-      console.error('Translation error:', error);
-      alert(`Translation failed: ${error.message}`);
-    } finally {
-      setIsTranslating(false);
+  // Replace page content when translation changes
+  useEffect(() => {
+    if (isUrdu && !loading) {
+      // Content will be handled by parent wrapper
+      console.log('Switched to Urdu view');
     }
+  }, [isUrdu, loading]);
+
+  // Check authentication
+  const isAuthenticated = !!authToken && !!userEmail;
+
+  // Button states
+  const getButtonLabel = () => {
+    if (loading) {
+      return '⏳ Translating...';
+    }
+    if (isUrdu) {
+      return '🇬🇧 View in English';
+    }
+    return '🇵🇰 Translate to Urdu';
   };
 
-  const resetToOriginal = () => {
-    if (onContentChange) {
-      onContentChange(content);
+  const getButtonClass = () => {
+    let classes = ['urdu-translation-button'];
+    if (loading) classes.push('translating');
+    if (isUrdu) classes.push('urdu-active');
+    if (!isAuthenticated) classes.push('disabled');
+    return classes.join(' ');
+  };
+
+  const handleClick = () => {
+    if (!isAuthenticated) {
+      // Redirect to login
+      window.location.href = '/signup';
+      return;
     }
-    setIsUrdu(false);
+
+    handleToggle();
   };
 
   return (
-    <div className="translation-container">
+    <div className="urdu-translation-container">
       <button
-        onClick={toggleTranslation}
-        disabled={isTranslating}
-        className="translation-button"
-        title={isUrdu ? "Switch back to English" : "Translate to Urdu"}
+        onClick={handleClick}
+        disabled={loading}
+        className={getButtonClass()}
+        title={
+          !isAuthenticated
+            ? 'Login required for translations'
+            : isUrdu
+            ? 'Switch back to English'
+            : 'Translate chapter to Urdu'
+        }
       >
-        {isTranslating ? (
-          'Translating...'
-        ) : isUrdu ? (
-          'English'
-        ) : (
-          'اردو میں دیکھیں'
-        )}
+        {getButtonLabel()}
       </button>
 
-      {isUrdu && (
-        <button
-          onClick={resetToOriginal}
-          className="reset-button"
-          title="Reset to original content"
-        >
-          Reset
-        </button>
+      {/* Loading indicator with estimated time */}
+      {loading && (
+        <div className="translation-loading">
+          <span className="spinner">◌</span>
+          <span className="loading-text">
+            Translating content... estimated 8-10 seconds
+          </span>
+        </div>
       )}
 
-      <div className="translation-info">
-        <small>
-          {isUrdu
-            ? 'Displaying content in Urdu'
-            : 'Content available in English'}
-        </small>
-      </div>
+      {/* Cache indicator */}
+      {isUrdu && cached && !loading && (
+        <div className="translation-cache-indicator">
+          <span className="cache-icon">⚡</span>
+          <span className="cache-text">Loaded from cache</span>
+        </div>
+      )}
+
+      {/* Error message */}
+      {error && (
+        <div className="translation-error">
+          <span className="error-icon">⚠️</span>
+          <span className="error-text">{error}</span>
+          <button
+            className="retry-button"
+            onClick={handleTranslate}
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Authentication prompt for unauthenticated users */}
+      {!isAuthenticated && (
+        <div className="translation-auth-prompt">
+          <span className="auth-icon">🔐</span>
+          <span className="auth-text">
+            <a href="/signup" className="auth-link">
+              Sign up
+            </a>
+            {' or '}
+            <a href="/login" className="auth-link">
+              login
+            </a>
+            {' to translate content'}
+          </span>
+        </div>
+      )}
+
+      {/* Info text */}
+      {isAuthenticated && !error && (
+        <div className="translation-info">
+          <small>
+            {isUrdu
+              ? '📖 Displaying content in Urdu (اردو میں)'
+              : '📖 Content available in English'}
+          </small>
+        </div>
+      )}
     </div>
   );
 };

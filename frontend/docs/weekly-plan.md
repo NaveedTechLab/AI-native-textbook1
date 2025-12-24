@@ -1,5 +1,6 @@
 ---
 sidebar_position: 7
+chapter_id: weekly-plan
 ---
 
 # Weekly Learning Plan for Physical AI & Humanoid Robotics

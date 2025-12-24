@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Translation Response Schema",
+  "description": "Response schema for POST /api/translate/urdu endpoint",
+  "type": "object",
+  "required": ["translated_content", "cached", "translation_id"],
+  "properties": {
+    "translated_content": {
+      "type": "string",
+      "description": "Translated Urdu content with preserved markdown formatting, code blocks, and LaTeX equations"
+    },
+    "cached": {
+      "type": "boolean",
+      "description": "True if translation was returned from database cache, false if freshly translated via LLM"
+    },
+    "translation_id": {
+      "type": "string",
+      "description": "UUID of the translation record in database, or 'none' if caching failed but translation succeeded",
+      "pattern": "^([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|none)$"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "translated_content": "# ROS2 کا تعارف\n\nROS2 ایک middleware فریم ورک ہے...",
+      "cached": false,
+      "translation_id": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    {
+      "translated_content": "# ROS2 کا تعارف\n\nROS2 ایک middleware فریم ورک ہے...",
+      "cached": true,
+      "translation_id": "550e8400-e29b-41d4-a716-446655440001"
+    },
+    {
+      "translated_content": "# ROS2 کا تعارف\n\nROS2 ایک middleware فریم ورک ہے...",
+      "cached": false,
+      "translation_id": "none"
+    }
+  ]
+}

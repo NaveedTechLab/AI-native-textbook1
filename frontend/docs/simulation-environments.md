@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+chapter_id: "ch02-simulation-environments"
 ---
 
 # Module 2: Simulation Environments - Gazebo and Unity

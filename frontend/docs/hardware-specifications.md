@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+chapter_id: hardware-specifications
 ---
 
 # Hardware Specifications for Physical AI & Humanoid Robotics

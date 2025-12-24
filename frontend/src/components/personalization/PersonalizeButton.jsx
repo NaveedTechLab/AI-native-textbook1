@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-const PersonalizeButton = ({ chapterId, content, onContentChange }) => {
+const PersonalizeButton = ({ chapterId }) => {
   const [isPersonalized, setIsPersonalized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [personalizedContent, setPersonalizedContent] = useState(null);
 
   // Check if user is authenticated and get their profile
   useEffect(() => {
@@ -15,7 +16,11 @@ const PersonalizeButton = ({ chapterId, content, onContentChange }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch('/api/auth/profile', {
+      const API_BASE = process.env.NODE_ENV === 'production'
+        ? '/api'
+        : 'http://localhost:8001/api';
+
+      const response = await fetch(`${API_BASE}/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('user_token')}`
         }
@@ -39,7 +44,15 @@ const PersonalizeButton = ({ chapterId, content, onContentChange }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/personalization/adapt', {
+      // Get the current page content from the DOM
+      const contentElement = document.querySelector('article.theme-doc-markdown');
+      const content = contentElement ? contentElement.innerText.substring(0, 10000) : '';
+
+      const API_BASE = process.env.NODE_ENV === 'production'
+        ? '/api'
+        : 'http://localhost:8001/api';
+
+      const response = await fetch(`${API_BASE}/personalization/adapt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,13 +71,14 @@ const PersonalizeButton = ({ chapterId, content, onContentChange }) => {
 
       const data = await response.json();
 
-      // Update the content with personalized version
-      if (onContentChange) {
-        onContentChange(data.personalized_content);
-      }
+      console.log('Personalization API response:', data);
+      console.log('Original content length:', content.length);
+      console.log('Personalized content length:', data.personalized_content.length);
+      console.log('Adaptation details:', data.adaptation_details);
 
+      // Store the personalized content
+      setPersonalizedContent(data.personalized_content);
       setIsPersonalized(true);
-      alert('Content has been personalized based on your background!');
     } catch (error) {
       console.error('Error personalizing content:', error);
       alert('Failed to personalize content. Please try again.');
@@ -74,47 +88,90 @@ const PersonalizeButton = ({ chapterId, content, onContentChange }) => {
   };
 
   const handleReset = () => {
-    // Reset to original content
-    if (onContentChange) {
-      onContentChange(content);
-    }
+    setPersonalizedContent(null);
     setIsPersonalized(false);
   };
 
   return (
-    <div className="personalize-container">
+    <div className="personalize-container" style={{
+      margin: '1.5rem 0',
+      padding: '1rem',
+      background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))',
+      borderRadius: '12px',
+      border: '1px solid rgba(59, 130, 246, 0.3)',
+    }}>
       {userProfile ? (
-        <div className="personalize-controls">
-          <button
-            onClick={isPersonalized ? handleReset : handlePersonalize}
-            disabled={isLoading}
-            className={`personalize-button ${isPersonalized ? 'reset' : 'personalize'}`}
-          >
-            {isLoading ? (
-              'Processing...'
-            ) : isPersonalized ? (
-              'Reset to Original'
-            ) : (
-              'Personalize Content'
-            )}
-          </button>
-          <div className="user-profile-info">
-            <small>
-              Based on: {userProfile.software_background || userProfile.hardware_background || 'General'}
-              ({userProfile.experience_level || 'Unknown'} level)
-            </small>
+        <>
+          <div className="personalize-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: personalizedContent ? '1rem' : '0' }}>
+            <button
+              onClick={isPersonalized ? handleReset : handlePersonalize}
+              disabled={isLoading}
+              style={{
+                padding: '0.5rem 1.5rem',
+                backgroundColor: isPersonalized ? '#ef4444' : '#3b82f6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: isLoading ? 'wait' : 'pointer',
+                fontWeight: '600',
+                fontSize: '0.95rem',
+                transition: 'all 0.3s ease',
+              }}
+            >
+              {isLoading ? (
+                '⏳ Processing...'
+              ) : isPersonalized ? (
+                '🔄 Reset to Original'
+              ) : (
+                '✨ Personalize for My Background'
+              )}
+            </button>
+            <div className="user-profile-info">
+              <small style={{ color: '#64748b', fontWeight: '500' }}>
+                {userProfile.software_background && `💻 ${userProfile.software_background}`}
+                {userProfile.software_background && userProfile.hardware_background && ' • '}
+                {userProfile.hardware_background && `🔧 ${userProfile.hardware_background}`}
+              </small>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="personalize-prompt">
-          <p>
-            <small>
-              <a href="#" onClick={(e) => {
-                e.preventDefault();
-                alert('Please log in to access personalization features.');
+
+          {/* Display personalized roadmap */}
+          {personalizedContent && (
+            <div className="personalized-roadmap" style={{
+              marginTop: '1rem',
+              padding: '1.5rem',
+              background: 'rgba(255, 255, 255, 0.9)',
+              borderRadius: '8px',
+              border: '2px solid #3b82f6',
+            }}>
+              <h3 style={{
+                color: '#1e40af',
+                marginTop: 0,
+                fontSize: '1.3rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
               }}>
-                Log in to personalize content
-              </a> based on your background
+                🎯 Your Personalized Learning Roadmap
+              </h3>
+              <div style={{
+                whiteSpace: 'pre-wrap',
+                lineHeight: '1.7',
+                color: '#334155',
+                fontSize: '0.95rem'
+              }}>
+                {personalizedContent}
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="personalize-prompt" style={{ textAlign: 'center' }}>
+          <p style={{ margin: 0 }}>
+            <small style={{ color: '#64748b' }}>
+              🔒 <a href="/docs/auth/signup" style={{ color: '#3b82f6', fontWeight: '600' }}>
+                Log in or sign up
+              </a> to get personalized content tailored to your software & hardware background
             </small>
           </p>
         </div>

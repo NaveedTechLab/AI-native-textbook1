@@ -7,7 +7,7 @@ const SignupWithBackground = ({ onSignup }) => {
     confirmPassword: '',
     softwareBackground: '',
     hardwareBackground: '',
-    experienceLevel: ''
+    experienceLevel: 'Intermediate'
   });
   const [errors, setErrors] = useState({});
 
@@ -38,16 +38,20 @@ const SignupWithBackground = ({ onSignup }) => {
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
     }
 
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    if (!formData.softwareBackground && !formData.hardwareBackground) {
-      newErrors.background = 'Please select at least one background area';
+    if (!formData.softwareBackground || formData.softwareBackground.length < 10) {
+      newErrors.softwareBackground = 'Software background must be at least 10 characters';
+    }
+
+    if (!formData.hardwareBackground || formData.hardwareBackground.length < 10) {
+      newErrors.hardwareBackground = 'Hardware background must be at least 10 characters';
     }
 
     if (!formData.experienceLevel) {
@@ -62,50 +66,9 @@ const SignupWithBackground = ({ onSignup }) => {
     e.preventDefault();
 
     if (validateForm()) {
-      try {
-        const response = await fetch('/api/auth/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-            software_background: formData.softwareBackground,
-            hardware_background: formData.hardwareBackground,
-            experience_level: formData.experienceLevel
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        // Store user info in localStorage (in a real app, use secure storage)
-        localStorage.setItem('user_token', data.access_token);
-        localStorage.setItem('user_id', data.user_id);
-
-        // Call the onSignup callback
-        if (onSignup) {
-          onSignup(data);
-        }
-
-        // Reset form
-        setFormData({
-          email: '',
-          password: '',
-          confirmPassword: '',
-          softwareBackground: '',
-          hardwareBackground: '',
-          experienceLevel: ''
-        });
-
-        alert('Registration successful! You can now access personalized features.');
-      } catch (error) {
-        console.error('Signup error:', error);
-        alert(`Signup failed: ${error.message}`);
+      // Just pass formData to parent - parent will handle API call
+      if (onSignup) {
+        onSignup(formData);
       }
     }
   };
@@ -156,41 +119,33 @@ const SignupWithBackground = ({ onSignup }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="softwareBackground">Software Background:</label>
-          <select
+          <label htmlFor="softwareBackground">Software Background (min 10 characters):</label>
+          <textarea
             id="softwareBackground"
             name="softwareBackground"
             value={formData.softwareBackground}
             onChange={handleChange}
             className={errors.softwareBackground ? 'error' : ''}
-          >
-            <option value="">Select your software background</option>
-            <option value="Software Engineer">Software Engineer</option>
-            <option value="Student (Software)">Student (Software)</option>
-            <option value="Developer">Developer</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
+            placeholder="e.g., Python developer with 5 years experience, familiar with FastAPI and React"
+            rows="3"
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--ifm-color-emphasis-300)' }}
+          />
+          {errors.softwareBackground && <span className="error-message">{errors.softwareBackground}</span>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="hardwareBackground">Hardware Background:</label>
-          <select
+          <label htmlFor="hardwareBackground">Hardware Background (min 10 characters):</label>
+          <textarea
             id="hardwareBackground"
             name="hardwareBackground"
             value={formData.hardwareBackground}
             onChange={handleChange}
             className={errors.hardwareBackground ? 'error' : ''}
-          >
-            <option value="">Select your hardware background</option>
-            <option value="Hardware Engineer">Hardware Engineer</option>
-            <option value="Student (Hardware)">Student (Hardware)</option>
-            <option value="Designer">Designer</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
+            placeholder="e.g., Hobbyist with Arduino and Raspberry Pi projects, beginner in robotics"
+            rows="3"
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--ifm-color-emphasis-300)' }}
+          />
+          {errors.hardwareBackground && <span className="error-message">{errors.hardwareBackground}</span>}
         </div>
 
         <div className="form-group">

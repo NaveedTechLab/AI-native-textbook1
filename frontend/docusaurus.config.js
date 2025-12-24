@@ -10,8 +10,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'AI-native Physical AI & Humanoid Robotics Textbook',
-  tagline: 'Interactive learning with AI assistance',
+  title: 'Physical AI & Humanoid Robotics Textbook',
+  tagline: 'AI-powered interactive learning for embodied intelligence',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -118,11 +118,26 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Physical AI',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            to: '/docs/humanoid-robotics/intro',
+            label: 'Humanoid Robotics',
+            position: 'left',
+          },
+          {
+            to: '/login',
+            label: '🔐 Login',
+            position: 'right',
+          },
+          {
+            to: '/signup',
+            label: '🤖 Sign Up',
+            position: 'right',
+            className: 'navbar-signup-button',
+          },
+          {
+            href: 'https://github.com/Naveed247365/AI-native-textbook1',
             label: 'GitHub',
             position: 'right',
           },
@@ -132,46 +147,46 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Physical AI',
             items: [
               {
-                label: 'Tutorial',
+                label: 'Introduction to Physical AI',
                 to: '/docs/intro',
               },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'X',
-                href: 'https://x.com/docusaurus',
+                label: 'Embodied Intelligence',
+                to: '/docs/embodied-intelligence',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'Humanoid Robotics',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
+                label: 'Humanoid Robotics Intro',
+                to: '/docs/humanoid-robotics/intro',
+              },
+              {
+                label: 'Control Systems',
+                to: '/docs/humanoid-robotics/control-systems',
+              },
+            ],
+          },
+          {
+            title: 'Resources',
+            items: [
+              {
+                label: 'Research Papers',
+                href: 'https://scholar.google.com',
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/Naveed247365/AI-native-textbook1',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} AI-native Physical AI & Humanoid Robotics Textbook. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,

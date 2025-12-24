@@ -14,7 +14,12 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     e.preventDefault();
 
     try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup';
+      // Use direct backend URL in development, proxy in production
+      const API_BASE = process.env.NODE_ENV === 'production'
+        ? '/api'
+        : 'http://localhost:8001/api';
+
+      const endpoint = isLogin ? `${API_BASE}/auth/login` : `${API_BASE}/auth/signup`;
       const payload = isLogin
         ? { email, password }
         : {
