@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Translation Request Schema",
+  "description": "Request schema for POST /api/translate/urdu endpoint",
+  "type": "object",
+  "required": ["chapter_id", "content", "content_hash"],
+  "properties": {
+    "chapter_id": {
+      "type": "string",
+      "description": "Unique chapter identifier from frontmatter metadata",
+      "pattern": "^[a-z0-9-]+$",
+      "minLength": 3,
+      "maxLength": 255,
+      "examples": [
+        "intro-to-ros2",
+        "chapter-01-basics",
+        "robotics-fundamentals"
+      ]
+    },
+    "content": {
+      "type": "string",
+      "description": "Full chapter content in Markdown/MDX format with preserved formatting",
+      "minLength": 10,
+      "maxLength": 50000
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "SHA-256 hash of content for cache validation and integrity checking",
+      "pattern": "^[a-f0-9]{64}$",
+      "examples": [
+        "5d41402abc4b2a76b9719d911017c592ae50d9b3e42069f8c9a27e0c7f0e1234"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "chapter_id": "intro-to-ros2",
+      "content": "# Introduction to ROS2\n\nROS2 is a middleware framework...",
+      "content_hash": "a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890"
+    }
+  ]
+}
