@@ -1,5 +1,6 @@
 ---
 sidebar_position: 8
+chapter_id: capstone-project
 ---
 
 # Capstone Project: Embodied Intelligence System

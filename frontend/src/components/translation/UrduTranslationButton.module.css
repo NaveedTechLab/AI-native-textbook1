@@ -1,0 +1,240 @@
+/* Urdu Translation Button Styles */
+
+.urdu-translation-container {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05));
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.urdu-translation-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid #10b981;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.urdu-translation-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.urdu-translation-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.urdu-translation-button.urdu-active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-color: #3b82f6;
+}
+
+.urdu-translation-button.disabled {
+  background: #9ca3af;
+  border-color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.urdu-translation-button.translating {
+  background: #f59e0b;
+  border-color: #d97706;
+  cursor: wait;
+}
+
+.urdu-translation-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+/* Loading Indicator */
+.translation-loading {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid #f59e0b;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.spinner {
+  font-size: 1.5rem;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  color: #92400e;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Cache Indicator */
+.translation-cache-indicator {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid #10b981;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cache-icon {
+  font-size: 1.2rem;
+}
+
+.cache-text {
+  color: #065f46;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Error Message */
+.translation-error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+  color: #dc2626;
+}
+
+.error-text {
+  flex: 1;
+  color: #991b1b;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.retry-button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid #dc2626;
+  border-radius: 4px;
+  background: white;
+  color: #dc2626;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover {
+  background: #dc2626;
+  color: white;
+}
+
+/* Authentication Prompt */
+.translation-auth-prompt {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid #3b82f6;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.auth-icon {
+  font-size: 1.5rem;
+}
+
+.auth-text {
+  color: #1e40af;
+  font-size: 0.9rem;
+}
+
+.auth-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.auth-link:hover {
+  color: #1d4ed8;
+}
+
+/* Info Text */
+.translation-info {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.translation-info small {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* RTL Support for Urdu Content */
+.urdu-content {
+  direction: rtl;
+  text-align: right;
+  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Nafees Nastaleeq', 'Times New Roman', serif;
+  line-height: 2;
+  font-size: 1.1rem;
+}
+
+/* Keep code blocks LTR */
+.urdu-content pre,
+.urdu-content code {
+  direction: ltr;
+  text-align: left;
+  font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+/* Dark mode support */
+[data-theme='dark'] .urdu-translation-container {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme='dark'] .translation-loading {
+  background: rgba(245, 158, 11, 0.15);
+}
+
+[data-theme='dark'] .loading-text {
+  color: #fbbf24;
+}
+
+[data-theme='dark'] .cache-text {
+  color: #34d399;
+}
+
+[data-theme='dark'] .error-text {
+  color: #fca5a5;
+}
+
+[data-theme='dark'] .auth-text {
+  color: #93c5fd;
+}
+
+[data-theme='dark'] .translation-info small {
+  color: #9ca3af;
+}
