@@ -54,21 +54,7 @@ const config = {
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false, // Disabled - This is a textbook, not a blog
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -139,11 +125,6 @@ const config = {
             position: 'right',
             className: 'navbar-signup-button',
           },
-          {
-            href: 'https://github.com/Naveed247365/AI-native-textbook1',
-            label: 'GitHub',
-            position: 'right',
-          },
         ],
       },
       footer: {
@@ -205,7 +186,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} AI-Powered Physical AI & Humanoid Robotics Textbook | Built with Docusaurus`,
+        copyright: `Copyright © ${new Date().getFullYear()} Physical AI & Humanoid Robotics Textbook. Open Educational Resource.`,
       },
       prism: {
         theme: prismThemes.github,
