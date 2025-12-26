@@ -1,25 +1,4 @@
-/* Homepage Black Border Fixes */
-/* Remove any unwanted black borders from homepage elements */
+/* Homepage Style Fixes */
+/* Minimal fixes - keep Docusaurus defaults */
 
-.humanoidEye {
-  border: none !important;
-  background: #76B900 !important; /* NVIDIA Green eyes */
-  box-shadow: 0 0 20px rgba(118, 185, 0, 0.6) !important;
-}
-
-.humanoidHead,
-.humanoidBody,
-.humanoidArm,
-.humanoidLeg {
-  border-color: rgba(118, 185, 0, 0.3) !important; /* Green tint instead of black */
-}
-
-/* Ensure no black borders on cards */
-.highlightCard {
-  border-color: rgba(118, 185, 0, 0.2) !important;
-}
-
-/* Fix any stray black borders */
-* {
-  border-color: inherit !important;
-}
+/* Only fix specific homepage elements if needed */
