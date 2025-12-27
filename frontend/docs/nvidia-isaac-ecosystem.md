@@ -5,10 +5,6 @@ chapter_id: "ch03-nvidia-isaac-ecosystem"
 
 # Module 3: NVIDIA Isaac Ecosystem - Perception, Navigation, and Manipulation
 
-<div style={{textAlign: 'center', margin: '1rem 0'}}>
-  <img src="https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?w=1200&q=80" alt="NVIDIA Isaac AI Platform" style={{width: '100%', maxWidth: '800px', borderRadius: '12px', boxShadow: '0 8px 16px rgba(0,0,0,0.1)'}} />
-  <p style={{fontSize: '0.9rem', color: '#666', marginTop: '0.5rem'}}>GPU-accelerated robotics with NVIDIA Isaac</p>
-</div>
 
 ## Introduction to NVIDIA Isaac
 
@@ -41,10 +37,6 @@ Isaac Lab is a research framework for robot learning that provides:
 
 ### Perception with Isaac
 
-<div style={{textAlign: 'center', margin: '1rem 0'}}>
-  <img src="https://images.unsplash.com/photo-1507146153580-69a1fe6d8aa1?w=800&q=80" alt="AI-Powered Perception" style={{width: '100%', maxWidth: '600px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)'}} />
-  <p style={{fontSize: '0.9rem', color: '#666', marginTop: '0.5rem'}}>Advanced AI perception for robotics</p>
-</div>
 
 #### Visual Perception
 Isaac provides advanced computer vision capabilities:
@@ -192,10 +184,6 @@ The Isaac ecosystem supports embodied intelligence through:
 
 ### Isaac Hardware Ecosystem
 
-<div style={{textAlign: 'center', margin: '1rem 0'}}>
-  <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=80" alt="NVIDIA Jetson Edge AI" style={{width: '100%', maxWidth: '600px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)'}} />
-  <p style={{fontSize: '0.9rem', color: '#666', marginTop: '0.5rem'}}>Edge AI computing with NVIDIA Jetson</p>
-</div>
 
 #### Jetson Platform
 Isaac runs efficiently on NVIDIA Jetson:

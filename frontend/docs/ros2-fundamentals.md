@@ -5,16 +5,11 @@ chapter_id: "ch01-ros2-fundamentals"
 
 # Module 1: ROS 2 Fundamentals
 
-<div style={{textAlign: 'center', margin: '1rem 0'}}>
-  <img src="https://images.unsplash.com/photo-1518314916381-77a37c2a49ae?w=1200&q=80" alt="ROS 2 Robotics System" style={{width: '100%', maxWidth: '800px', borderRadius: '12px', boxShadow: '0 8px 16px rgba(0,0,0,0.1)'}} />
-  <p style={{fontSize: '0.9rem', color: '#666', marginTop: '0.5rem'}}>Distributed robotics architecture with ROS 2</p>
-</div>
-
 ## Introduction to Robot Operating System 2
 
 The Robot Operating System 2 (ROS 2) is a flexible framework for writing robot software. It's a collection of tools, libraries, and conventions that aim to simplify the task of creating complex and robust robot behavior across a wide variety of robotic platforms.
 
-### What is ROS 2?
+## What is ROS 2?
 
 ROS 2 is the next generation of the Robot Operating System, designed to address the limitations of ROS 1 and provide a more robust, secure, and production-ready platform for robotics development. Unlike ROS 1, which was primarily designed for research applications, ROS 2 is built with industrial and commercial deployment in mind.
 
@@ -25,14 +20,10 @@ Key improvements in ROS 2 include:
 - Quality of Service (QoS) policies
 - Cross-platform compatibility (Linux, Windows, macOS)
 
-### Core Concepts
+## Core Concepts
 
-<div style={{textAlign: 'center', margin: '1rem 0'}}>
-  <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" alt="ROS 2 Node Architecture" style={{width: '100%', maxWidth: '600px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)'}} />
-  <p style={{fontSize: '0.9rem', color: '#666', marginTop: '0.5rem'}}>Modular node architecture for distributed processing</p>
-</div>
+### Nodes
 
-#### Nodes
 A node is an executable that uses ROS 2 to communicate with other nodes. Nodes are the fundamental building blocks of a ROS 2 system. Each node typically performs a specific task and communicates with other nodes through topics, services, or actions.
 
 ```python
@@ -52,20 +43,24 @@ class MinimalPublisher(Node):
         self.publisher.publish(msg)
 ```
 
-#### Topics and Messages
+### Topics and Messages
+
 Topics are named buses over which nodes exchange messages. A node can publish messages to a topic or subscribe to messages from a topic. This creates a publish/subscribe communication pattern that allows for loose coupling between nodes.
 
 Messages are the data structures that are passed between nodes via topics. They are defined in `.msg` files and can contain primitive types like integers, floats, and strings, as well as arrays and other message types.
 
-#### Services
+### Services
+
 Services provide a request/reply communication pattern. A service client sends a request to a service server, which processes the request and returns a response. This is useful for operations that require a direct response.
 
-#### Actions
+### Actions
+
 Actions are used for long-running tasks that may take a significant amount of time to complete. They provide feedback during execution and can be canceled. Actions are ideal for navigation, manipulation, and other tasks with intermediate results.
 
-### Setting Up Your ROS 2 Environment
+## Setting Up Your ROS 2 Environment
 
-#### Installation
+### Installation
+
 ROS 2 can be installed on various platforms. For Ubuntu, the installation process involves:
 
 1. Setting up the ROS 2 apt repository
@@ -84,14 +79,15 @@ sudo apt update
 sudo apt install ros-humble-desktop
 ```
 
-#### Environment Setup
+### Environment Setup
+
 After installation, source the ROS 2 environment:
 
 ```bash
 source /opt/ros/humble/setup.bash
 ```
 
-### Creating Your First ROS 2 Package
+## Creating Your First ROS 2 Package
 
 A ROS 2 package is a container for ROS 2 code. It contains nodes, libraries, and other resources. To create a new package:
 
@@ -101,9 +97,9 @@ cd ~/ros2_ws/src
 ros2 pkg create --build-type ament_python my_robot_package
 ```
 
-### Working with URDF (Unified Robot Description Format)
+## Working with URDF
 
-URDF is an XML format for representing a robot model. It defines the physical and visual properties of a robot, including links, joints, and materials.
+URDF (Unified Robot Description Format) is an XML format for representing a robot model. It defines the physical and visual properties of a robot, including links, joints, and materials.
 
 ```xml
 <?xml version="1.0"?>
@@ -135,23 +131,19 @@ URDF is an XML format for representing a robot model. It defines the physical an
 </robot>
 ```
 
-### ROS 2 and Embodied Intelligence
+## ROS 2 and Embodied Intelligence
 
 ROS 2 plays a crucial role in embodied intelligence by providing the communication infrastructure that allows different components of a robotic system to work together. The modular architecture of ROS 2 enables:
 
-- **Distributed Processing**: Different nodes can run on different hardware components (sensors, actuators, processing units)
+- **Distributed Processing**: Different nodes can run on different hardware components
 - **Reusability**: Components developed for one robot can be reused in other robots
 - **Simulation Integration**: Easy integration with simulation environments like Gazebo
-- **Hardware Abstraction**: Code can be written independently of specific hardware implementations
+- **Hardware Abstraction**: Code can be written independently of specific hardware
 
-### Best Practices
+## Best Practices
 
 1. **Modular Design**: Keep nodes focused on specific tasks
 2. **Appropriate QoS Settings**: Choose Quality of Service policies based on your application's requirements
 3. **Resource Management**: Properly manage memory and computational resources
 4. **Error Handling**: Implement robust error handling and recovery mechanisms
 5. **Documentation**: Document your code and interfaces thoroughly
-
-## Try With AI
-
-Try asking your AI companion to explain the differences between ROS 1 and ROS 2 in more detail, or ask for help creating a specific ROS 2 node for your hardware platform. You can also ask for examples of how URDF models are used in actual humanoid robots.
