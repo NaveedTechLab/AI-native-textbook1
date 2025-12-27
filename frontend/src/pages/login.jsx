@@ -50,8 +50,10 @@ export default function LoginPage() {
       localStorage.setItem('user_token', data.access_token);
       localStorage.setItem('user_email', data.email);
 
+      // Dispatch auth change event for navbar update
+      window.dispatchEvent(new Event('authChange'));
+
       // Redirect to docs
-      alert('✅ Login successful! Welcome back');
       history.push('/docs/intro');
     } catch (err) {
       console.error('Login error:', err);

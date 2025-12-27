@@ -6,6 +6,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first to leverage Docker cache
@@ -22,4 +23,4 @@ COPY . .
 EXPOSE 7860
 
 # Run the application on port 7860 for HuggingFace Spaces
-CMD ["python", "-c", "from main import app; import uvicorn; uvicorn.run(app, host='0.0.0.0', port=7860)"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]

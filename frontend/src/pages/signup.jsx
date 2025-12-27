@@ -49,8 +49,10 @@ export default function SignupPage() {
       localStorage.setItem('user_token', data.access_token);
       localStorage.setItem('user_email', data.email);
 
+      // Dispatch auth change event for navbar update
+      window.dispatchEvent(new Event('authChange'));
+
       // Redirect to docs
-      alert('✅ Signup successful! Welcome to Physical AI Textbook');
       history.push('/docs/intro');
     } catch (err) {
       console.error('Signup error:', err);
