@@ -125,30 +125,14 @@ const PersonalizeButton = ({ chapterId }) => {
   };
 
   return (
-    <div className="personalize-container" style={{
-      margin: '1.5rem 0',
-      padding: '1rem',
-      background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))',
-      borderRadius: '12px',
-      border: '1px solid rgba(59, 130, 246, 0.3)',
-    }}>
+    <div className="personalize-container">
       {userProfile ? (
         <>
-          <div className="personalize-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: personalizedContent ? '1rem' : '0' }}>
+          <div className="personalize-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: personalizedContent ? '1rem' : '0' }}>
             <button
               onClick={isPersonalized ? handleReset : handlePersonalize}
               disabled={isLoading}
-              style={{
-                padding: '0.5rem 1.5rem',
-                backgroundColor: isPersonalized ? '#ef4444' : '#3b82f6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: isLoading ? 'wait' : 'pointer',
-                fontWeight: '600',
-                fontSize: '0.95rem',
-                transition: 'all 0.3s ease',
-              }}
+              className={`personalize-btn ${isPersonalized ? 'reset' : ''}`}
             >
               {isLoading ? (
                 '⏳ Processing...'
@@ -159,7 +143,7 @@ const PersonalizeButton = ({ chapterId }) => {
               )}
             </button>
             <div className="user-profile-info">
-              <small style={{ color: '#64748b', fontWeight: '500' }}>
+              <small>
                 {userProfile.software_background && `💻 ${userProfile.software_background}`}
                 {userProfile.software_background && userProfile.hardware_background && ' • '}
                 {userProfile.hardware_background && `🔧 ${userProfile.hardware_background}`}
@@ -169,43 +153,21 @@ const PersonalizeButton = ({ chapterId }) => {
 
           {/* Display personalized roadmap */}
           {personalizedContent && (
-            <div className="personalized-roadmap" style={{
-              marginTop: '1rem',
-              padding: '1.5rem',
-              background: 'rgba(255, 255, 255, 0.9)',
-              borderRadius: '8px',
-              border: '2px solid #3b82f6',
-            }}>
-              <h3 style={{
-                color: '#1e40af',
-                marginTop: 0,
-                fontSize: '1.3rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
-              }}>
+            <div className="personalized-roadmap">
+              <h3>
                 🎯 Your Personalized Learning Roadmap
               </h3>
-              <div style={{
-                whiteSpace: 'pre-wrap',
-                lineHeight: '1.7',
-                color: '#334155',
-                fontSize: '0.95rem'
-              }}>
+              <div>
                 {personalizedContent}
               </div>
             </div>
           )}
         </>
       ) : (
-        <div className="personalize-prompt" style={{ textAlign: 'center' }}>
+        <div className="personalize-prompt">
           <p style={{ margin: 0 }}>
-            <small style={{ color: '#64748b' }}>
-              🔒 <a href="/login" style={{ color: '#3b82f6', fontWeight: '600' }}>
-                Log in
-              </a> or <a href="/signup" style={{ color: '#3b82f6', fontWeight: '600' }}>
-                sign up
-              </a> to get personalized content tailored to your software & hardware background
+            <small>
+              🔒 <a href="/login">Log in</a> or <a href="/signup">sign up</a> to get personalized content tailored to your software & hardware background
             </small>
           </p>
         </div>

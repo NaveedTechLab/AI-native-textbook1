@@ -81,25 +81,12 @@ const UrduTranslationButton = ({ chapterId }) => {
   };
 
   return (
-    <div style={{
-      padding: '1rem',
-      border: '2px solid #10b981',
-      borderRadius: '8px',
-      marginBottom: '1rem',
-      backgroundColor: '#f0fdf4'
-    }}>
+    <div className="translation-container">
       <button
         onClick={handleClick}
         disabled={loading}
+        className={`translation-btn ${isUrdu ? 'urdu-active' : ''}`}
         style={{
-          padding: '0.75rem 1.5rem',
-          backgroundColor: loading ? '#9ca3af' : (isUrdu ? '#3b82f6' : '#10b981'),
-          color: 'white',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: loading ? 'not-allowed' : 'pointer',
-          fontSize: '1rem',
-          fontWeight: '600',
           opacity: !isAuthenticated ? 0.6 : 1
         }}
         title={
@@ -117,29 +104,24 @@ const UrduTranslationButton = ({ chapterId }) => {
       {loading && (
         <div className="translation-loading">
           <span className="spinner">◌</span>
-          <span className="loading-text">
-            Translating content... estimated 8-10 seconds
-          </span>
+          <span>Translating content... estimated 8-10 seconds</span>
         </div>
       )}
 
       {/* Cache indicator */}
       {isUrdu && cached && !loading && (
         <div className="translation-cache-indicator">
-          <span className="cache-icon">⚡</span>
-          <span className="cache-text">Loaded from cache</span>
+          <span>⚡</span>
+          <span>Loaded from cache</span>
         </div>
       )}
 
       {/* Error message */}
       {error && (
         <div className="translation-error">
-          <span className="error-icon">⚠️</span>
-          <span className="error-text">{error}</span>
-          <button
-            className="retry-button"
-            onClick={handleTranslate}
-          >
+          <span>⚠️</span>
+          <span>{error}</span>
+          <button className="retry-button" onClick={handleTranslate}>
             Retry
           </button>
         </div>
@@ -148,15 +130,11 @@ const UrduTranslationButton = ({ chapterId }) => {
       {/* Authentication prompt for unauthenticated users */}
       {!isAuthenticated && (
         <div className="translation-auth-prompt">
-          <span className="auth-icon">🔐</span>
-          <span className="auth-text">
-            <a href="/signup" className="auth-link">
-              Sign up
-            </a>
+          <span>🔐</span>
+          <span>
+            <a href="/signup" className="auth-link">Sign up</a>
             {' or '}
-            <a href="/login" className="auth-link">
-              login
-            </a>
+            <a href="/login" className="auth-link">login</a>
             {' to translate content'}
           </span>
         </div>
@@ -168,7 +146,6 @@ const UrduTranslationButton = ({ chapterId }) => {
           translationId={translationId}
           onFeedbackSubmit={(data) => {
             console.log('Feedback submitted:', data);
-            // Optional: Show success notification
           }}
         />
       )}
