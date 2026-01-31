@@ -1,25 +1,45 @@
 import React, { useState, useEffect } from 'react';
 
+// API Base URL
+const API_BASE = typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
+  ? 'https://naveed247365-ai-textbook-backend.hf.space/api'
+  : 'http://localhost:8001/api';
+
 const PersonalizeButton = ({ chapterId }) => {
   const [isPersonalized, setIsPersonalized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [personalizedContent, setPersonalizedContent] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Check if user is authenticated and get their profile
   useEffect(() => {
     const token = localStorage.getItem('user_token');
     if (token) {
       fetchUserProfile();
+    } else {
+      setProfileLoading(false);
     }
+
+    // Listen for auth changes
+    const handleAuthChange = () => {
+      const newToken = localStorage.getItem('user_token');
+      if (newToken) {
+        fetchUserProfile();
+      } else {
+        setUserProfile(null);
+        setProfileLoading(false);
+      }
+    };
+
+    window.addEventListener('authChange', handleAuthChange);
+    return () => window.removeEventListener('authChange', handleAuthChange);
   }, []);
 
   const fetchUserProfile = async () => {
+    setProfileLoading(true);
     try {
-      const API_BASE = process.env.NODE_ENV === 'production'
-        ? 'https://naveed247365-ai-textbook-backend.hf.space/api'
-        : 'http://localhost:8001/api';
-
       const response = await fetch(`${API_BASE}/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('user_token')}`
@@ -29,9 +49,16 @@ const PersonalizeButton = ({ chapterId }) => {
       if (response.ok) {
         const profile = await response.json();
         setUserProfile(profile);
+      } else if (response.status === 401) {
+        // Token expired, clear it
+        localStorage.removeItem('user_token');
+        localStorage.removeItem('user_email');
+        setUserProfile(null);
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -39,21 +66,23 @@ const PersonalizeButton = ({ chapterId }) => {
     const token = localStorage.getItem('user_token');
     if (!token || !userProfile) {
       alert('🔐 Please login to use Personalization features.\n\nGo to Login page to access this feature.');
-      // Redirect to login page
       window.location.href = '/login';
       return;
     }
 
+    // Check if user has profile data
+    if (!userProfile.software_background && !userProfile.hardware_background) {
+      alert('📝 Please complete your profile with software and hardware background to use personalization.\n\nThis helps us tailor content to your experience level.');
+      return;
+    }
+
     setIsLoading(true);
+    setError(null);
 
     try {
       // Get the current page content from the DOM
       const contentElement = document.querySelector('article.theme-doc-markdown');
       const content = contentElement ? contentElement.innerText.substring(0, 10000) : '';
-
-      const API_BASE = process.env.NODE_ENV === 'production'
-        ? 'https://naveed247365-ai-textbook-backend.hf.space/api'
-        : 'http://localhost:8001/api';
 
       const response = await fetch(`${API_BASE}/personalization/adapt`, {
         method: 'POST',

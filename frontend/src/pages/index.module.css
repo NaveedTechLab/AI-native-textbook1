@@ -73,11 +73,12 @@
   align-items: center;
 }
 
+/* Tablet Landscape (996px) */
 @media (max-width: 996px) {
   .heroContent {
     flex-direction: column;
     text-align: center;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 
   .heroText {
@@ -87,6 +88,49 @@
   .heroBanner {
     padding: 4rem 1.5rem;
     min-height: auto;
+  }
+
+  .heroTitle {
+    font-size: 2.75rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1rem;
+  }
+
+  /* Highlights grid for tablet */
+  .highlights {
+    padding: 4rem 1.5rem;
+  }
+
+  .highlightCard {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Features section tablet */
+  .featuresSection {
+    padding: 4rem 1.5rem;
+  }
+
+  .featureCard {
+    margin-bottom: 1rem;
+  }
+
+  /* CTA tablet */
+  .ctaSection {
+    padding: 4rem 1.5rem;
+  }
+
+  .ctaContent h2 {
+    font-size: 2rem;
   }
 }
 
@@ -129,9 +173,129 @@
   background-clip: text;
 }
 
+/* Tablet Portrait (768px) */
 @media (max-width: 768px) {
+  .heroBanner {
+    padding: 3rem 1rem;
+  }
+
   .heroTitle {
-    font-size: 2.5rem;
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .buttons a {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Robot visual smaller */
+  .robotContainer {
+    width: 200px;
+    height: 280px;
+    transform: scale(0.75);
+  }
+
+  /* Highlights */
+  .highlights {
+    padding: 3rem 1rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+
+  .highlightCard {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .highlightIcon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .highlightCard h3 {
+    font-size: 1.1rem;
+  }
+
+  .highlightCard p {
+    font-size: 0.9rem;
+  }
+
+  /* Stats grid 2x2 */
+  .statsGrid {
+    gap: 1.5rem;
+  }
+
+  .statNumber {
+    font-size: 2.25rem;
+  }
+
+  .statLabel {
+    font-size: 0.8rem;
+  }
+
+  /* Features */
+  .featuresSection {
+    padding: 3rem 1rem;
+  }
+
+  .featureCard {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .featureIcon {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .featureCard h3 {
+    font-size: 1rem;
+  }
+
+  .featureCard p {
+    font-size: 0.85rem;
+  }
+
+  /* CTA */
+  .ctaSection {
+    padding: 3rem 1rem;
+  }
+
+  .ctaContent h2 {
+    font-size: 1.75rem;
+  }
+
+  .ctaContent p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
   }
 }
 
@@ -638,9 +802,120 @@
   flex-wrap: wrap;
 }
 
+/* Mobile (480px) */
 @media (max-width: 480px) {
+  .heroBanner {
+    padding: 2rem 0.75rem;
+  }
+
+  .heroContent {
+    gap: 2rem;
+  }
+
+  .heroTitle {
+    font-size: 1.65rem;
+    margin-bottom: 1rem;
+  }
+
+  .heroSubtitle {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  /* Hide robot on small screens */
+  .heroVisual {
+    display: none;
+  }
+
+  /* Highlights */
+  .highlights {
+    padding: 2rem 0.75rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 0.9rem;
+  }
+
+  .highlightCard {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+
+  .highlightIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+    border-radius: 10px;
+  }
+
+  .highlightCard h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .highlightCard p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  /* Stats */
+  .statsSection {
+    padding: 2.5rem 0.75rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .statNumber {
+    font-size: 2rem;
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
+  }
+
+  /* Features */
+  .featuresSection {
+    padding: 2rem 0.75rem;
+  }
+
+  .featureCard {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .featureIcon {
+    font-size: 1.25rem;
+  }
+
+  .featureCard h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .featureCard p {
+    font-size: 0.8rem;
+  }
+
+  /* CTA */
+  .ctaSection {
+    padding: 2.5rem 0.75rem;
+  }
+
   .ctaButtons {
     flex-direction: column;
+    gap: 0.75rem;
   }
 
   .ctaButtons .button {
@@ -648,7 +923,79 @@
   }
 
   .ctaContent h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .ctaContent p {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+  }
+}
+
+/* Very Small Mobile (360px) */
+@media (max-width: 360px) {
+  .heroBanner {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .heroTitle {
+    font-size: 1.4rem;
+  }
+
+  .heroSubtitle {
+    font-size: 0.9rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.35rem;
+  }
+
+  .highlightCard,
+  .featureCard {
+    padding: 1rem;
+  }
+
+  .highlightCard h3,
+  .featureCard h3 {
+    font-size: 0.9rem;
+  }
+
+  .highlightCard p,
+  .featureCard p {
+    font-size: 0.8rem;
+  }
+
+  .statNumber {
+    font-size: 1.75rem;
+  }
+
+  .ctaContent h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Landscape mode on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .heroBanner {
+    min-height: auto;
+    padding: 2rem 1rem;
+  }
+
+  .heroVisual {
+    display: none;
+  }
+
+  .heroTitle {
+    font-size: 1.75rem;
+  }
+
+  .highlights,
+  .featuresSection,
+  .ctaSection,
+  .statsSection {
+    padding: 2rem 1rem;
   }
 }
 

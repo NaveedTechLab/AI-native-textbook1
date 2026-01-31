@@ -173,6 +173,49 @@ body {
   padding: var(--space-sm) var(--space-md);
 }
 
+/* Navbar Signup Button (from config) */
+.navbar-signup-button {
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, #00bf99 100%) !important;
+  color: #0f0f14 !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--radius-md) !important;
+  font-weight: 600 !important;
+  transition: all var(--transition-base) !important;
+}
+
+.navbar-signup-button:hover {
+  background: linear-gradient(135deg, var(--ifm-color-primary-light) 0%, var(--ifm-color-primary) 100%) !important;
+  color: #0f0f14 !important;
+  transform: translateY(-1px);
+}
+
+/* Responsive navbar items */
+@media (max-width: 996px) {
+  .navbar-signup-button {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile menu styles */
+  .navbar__items--right {
+    gap: 0.5rem;
+  }
+
+  .navbar-signup-button {
+    padding: 0.35rem 0.6rem !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-signup-button {
+    padding: 0.3rem 0.5rem !important;
+    font-size: 0.8rem !important;
+  }
+}
+
 /* ================================
    Footer Styling
    ================================ */
@@ -560,6 +603,22 @@ tr:hover td {
 /* ================================
    Responsive Adjustments
    ================================ */
+
+/* Large Desktop (1400px+) */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+
+/* Desktop (996px - 1400px) */
+@media (max-width: 1400px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/* Tablet Landscape (996px) */
 @media (max-width: 996px) {
   .navbar {
     padding: var(--space-xs) 0;
@@ -572,13 +631,455 @@ tr:hover td {
   .markdown h2 {
     font-size: 1.5rem;
   }
+
+  .markdown h3 {
+    font-size: 1.2rem;
+  }
+
+  /* Sidebar adjustments */
+  .menu {
+    padding: var(--space-sm);
+  }
+
+  .menu__link {
+    padding: var(--space-sm) var(--space-sm);
+    font-size: 0.85rem;
+  }
+
+  /* Footer responsive */
+  .footer {
+    padding: var(--space-2xl) 0 var(--space-lg);
+  }
 }
 
+/* Tablet Portrait (768px) */
 @media (max-width: 768px) {
   :root {
     --space-xl: 1.5rem;
     --space-2xl: 2rem;
     --space-3xl: 3rem;
+  }
+
+  /* Typography scaling */
+  .markdown h1 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .markdown h2 {
+    font-size: 1.35rem;
+    margin-top: var(--space-xl);
+  }
+
+  .markdown h3 {
+    font-size: 1.1rem;
+    margin-top: var(--space-lg);
+  }
+
+  .markdown p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  /* Tables responsive */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: var(--space-sm);
+    white-space: nowrap;
+  }
+
+  /* Code blocks */
+  pre {
+    padding: var(--space-sm);
+    font-size: 0.8rem;
+    border-radius: var(--radius-md);
+  }
+
+  /* Buttons touch-friendly */
+  .button {
+    padding: var(--space-md) var(--space-lg);
+    font-size: 1rem;
+    min-height: 48px; /* Touch target */
+  }
+
+  .button--lg {
+    padding: var(--space-md) var(--space-xl);
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Footer multi-column to single */
+  .footer__links {
+    flex-direction: column;
+  }
+
+  .footer__col {
+    margin-bottom: var(--space-lg);
+  }
+
+  /* Navbar mobile improvements */
+  .navbar__toggle {
+    padding: var(--space-sm);
+  }
+
+  .navbar__title {
+    font-size: 0.95rem;
+  }
+
+  /* Sidebar mobile */
+  .theme-doc-sidebar-container {
+    max-width: 280px;
+  }
+}
+
+/* Mobile (480px) */
+@media (max-width: 480px) {
+  :root {
+    --space-lg: 1rem;
+    --space-xl: 1.25rem;
+    --space-2xl: 1.5rem;
+    --space-3xl: 2rem;
+  }
+
+  /* Body padding for mobile */
+  body {
+    font-size: 15px;
+  }
+
+  /* Container full width */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Typography mobile */
+  .markdown h1 {
+    font-size: 1.35rem;
+    line-height: 1.3;
+  }
+
+  .markdown h2 {
+    font-size: 1.2rem;
+  }
+
+  .markdown h3 {
+    font-size: 1.05rem;
+  }
+
+  .markdown p {
+    font-size: 0.9rem;
+  }
+
+  /* Code smaller on mobile */
+  code {
+    font-size: 0.8em;
+  }
+
+  :not(pre) > code {
+    padding: 0.15em 0.3em;
+  }
+
+  /* Buttons full width on mobile */
+  .button {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Cards responsive */
+  .card {
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+  }
+
+  /* Alerts responsive */
+  .alert {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9rem;
+  }
+
+  /* TOC hide on small screens */
+  .table-of-contents {
+    display: none;
+  }
+}
+
+/* Small Mobile (360px) */
+@media (max-width: 360px) {
+  :root {
+    --space-md: 0.75rem;
+    --space-lg: 1rem;
+  }
+
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .markdown h1 {
+    font-size: 1.25rem;
+  }
+
+  .markdown h2 {
+    font-size: 1.1rem;
+  }
+
+  /* Very small buttons */
+  .button {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9rem;
+  }
+}
+
+/* Safe Area for notched devices (iPhone X+) */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .navbar {
+    padding-top: max(var(--space-sm), env(safe-area-inset-top));
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .footer {
+    padding-bottom: max(var(--space-xl), env(safe-area-inset-bottom));
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  .navbar__link {
+    padding: var(--space-md) var(--space-md);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .menu__link {
+    padding: var(--space-md) var(--space-md);
+    min-height: 44px;
+  }
+
+  /* Remove hover effects on touch */
+  .button:hover {
+    transform: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  /* Active states instead of hover */
+  .button:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  .card:active {
+    transform: scale(0.99);
+  }
+}
+
+/* High DPI / Retina displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Thinner borders on retina */
+  .card,
+  table,
+  pre {
+    border-width: 0.5px;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .heroBanner,
+  .hero {
+    min-height: auto;
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ================================
+   Signup Form Styles
+   ================================ */
+.signup-background-container {
+  width: 100%;
+}
+
+.signup-background-container h2 {
+  display: none; /* Already shown in parent */
+}
+
+.signup-background-container p {
+  display: none; /* Already shown in parent */
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.signup-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.signup-form label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+}
+
+.signup-form input,
+.signup-form textarea,
+.signup-form select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px; /* Prevents iOS zoom */
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.signup-form input:focus,
+.signup-form textarea:focus,
+.signup-form select:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+}
+
+.signup-form input.error,
+.signup-form textarea.error,
+.signup-form select.error {
+  border-color: #ef4444;
+}
+
+.signup-form .error-message {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.signup-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.signup-form .submit-button {
+  width: 100%;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, #00bf99 100%);
+  color: #0f0f14;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  min-height: 48px;
+  margin-top: 0.5rem;
+}
+
+.signup-form .submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 212, 170, 0.4);
+}
+
+.signup-form .submit-button:active {
+  transform: translateY(0);
+}
+
+.signup-info {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 212, 170, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 212, 170, 0.2);
+}
+
+.signup-info p {
+  display: block !important;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive signup form */
+@media (max-width: 768px) {
+  .signup-form {
+    gap: 1rem;
+  }
+
+  .signup-form label {
+    font-size: 0.9rem;
+  }
+
+  .signup-form input,
+  .signup-form textarea,
+  .signup-form select {
+    padding: 0.875rem;
+  }
+
+  .signup-info {
+    padding: 0.875rem;
+  }
+
+  .signup-info p {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .signup-form {
+    gap: 0.875rem;
+  }
+
+  .signup-form .form-group {
+    gap: 0.375rem;
+  }
+
+  .signup-form label {
+    font-size: 0.85rem;
+  }
+
+  .signup-form textarea {
+    min-height: 70px;
+  }
+
+  .signup-form .submit-button {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .signup-info {
+    padding: 0.75rem;
+    margin-top: 1rem;
   }
 }
 

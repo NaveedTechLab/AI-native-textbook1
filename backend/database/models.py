@@ -12,12 +12,24 @@ class User(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(255), unique=True, nullable=False, index=True)
-    password_hash = Column(String(255), nullable=False)
+    password_hash = Column(String(255), nullable=True)  # Nullable for OAuth users
+    full_name = Column(String(255), nullable=True)
     software_background = Column(Text, nullable=True)
     hardware_background = Column(Text, nullable=True)
     experience_level = Column(String(50), nullable=True, default="Intermediate")
+
+    # OAuth fields
+    oauth_provider = Column(String(50), nullable=True)  # 'google', 'facebook', or None
+    oauth_id = Column(String(255), nullable=True)  # Provider's user ID
+    profile_picture = Column(String(500), nullable=True)  # Profile picture URL from OAuth
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # Index for OAuth lookup
+    __table_args__ = (
+        Index('idx_user_oauth', 'oauth_provider', 'oauth_id'),
+    )
 
 class Personalization(Base):
     __tablename__ = "personalizations"

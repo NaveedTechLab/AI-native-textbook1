@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expires_in: int = 3600  # 1 hour default
 
+    # OAuth settings (optional - for Google/Facebook login)
+    google_client_id: Optional[str] = None
+    google_client_secret: Optional[str] = None
+    facebook_app_id: Optional[str] = None
+    facebook_app_secret: Optional[str] = None
+
     # Application settings
     debug: bool = False
     log_level: str = "info"

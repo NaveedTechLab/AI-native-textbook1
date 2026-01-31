@@ -1,3 +1,23 @@
+/* Navbar Content Styles */
 .colorModeToggle {
   margin-right: 1rem;
+}
+
+/* Responsive Navbar */
+@media (max-width: 996px) {
+  .colorModeToggle {
+    margin-right: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .colorModeToggle {
+    margin-right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .colorModeToggle {
+    margin-right: 0.25rem;
+  }
 }

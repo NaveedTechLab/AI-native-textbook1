@@ -108,6 +108,12 @@ app.add_middleware(
         "http://localhost:8000",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:3001",
+        # Production URLs
+        "https://naveed247365-ai-textbook-frontend.hf.space",
+        "https://ai-native-textbook.vercel.app",
+        # OAuth providers
+        "https://accounts.google.com",
+        "https://www.facebook.com",
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],

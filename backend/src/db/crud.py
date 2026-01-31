@@ -18,18 +18,35 @@ logger = logging.getLogger(__name__)
 
 
 # User CRUD Operations
-async def create_user(db: AsyncSession, email: str, hashed_password: str, full_name: Optional[str] = None) -> User:
-    """Create a new user"""
+async def create_user(
+    db: AsyncSession,
+    email: str,
+    hashed_password: Optional[str] = None,
+    full_name: Optional[str] = None,
+    software_background: Optional[str] = None,
+    hardware_background: Optional[str] = None,
+    experience_level: Optional[str] = "Intermediate",
+    oauth_provider: Optional[str] = None,
+    oauth_id: Optional[str] = None,
+    profile_picture: Optional[str] = None
+) -> User:
+    """Create a new user (supports both email/password and OAuth)"""
     try:
         db_user = User(
             email=email,
             hashed_password=hashed_password,
-            full_name=full_name
+            full_name=full_name,
+            software_background=software_background,
+            hardware_background=hardware_background,
+            experience_level=experience_level,
+            oauth_provider=oauth_provider,
+            oauth_id=oauth_id,
+            profile_picture=profile_picture
         )
         db.add(db_user)
         await db.commit()
         await db.refresh(db_user)
-        logger.info(f"User created with email: {email}")
+        logger.info(f"User created with email: {email}, oauth_provider: {oauth_provider}")
         return db_user
     except IntegrityError:
         await db.rollback()
@@ -41,6 +58,22 @@ async def create_user(db: AsyncSession, email: str, hashed_password: str, full_n
     except Exception as e:
         await db.rollback()
         logger.error(f"Error creating user: {e}")
+        raise
+
+
+async def get_user_by_oauth(db: AsyncSession, oauth_provider: str, oauth_id: str) -> Optional[User]:
+    """Get a user by OAuth provider and ID"""
+    try:
+        result = await db.execute(
+            select(User).filter(
+                User.oauth_provider == oauth_provider,
+                User.oauth_id == oauth_id
+            )
+        )
+        user = result.scalar_one_or_none()
+        return user
+    except Exception as e:
+        logger.error(f"Error getting user by OAuth: {e}")
         raise
 
 
