@@ -1,7 +1,33 @@
 /**
  * Physical AI & Humanoid Robotics Textbook
  * Homepage Styles - AgentFactory Inspired Design
+ * Supports both Light and Dark modes
  */
+
+/* ================================
+   CSS Variables for Theme Support
+   ================================ */
+:root {
+  --hero-bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+  --hero-text: #1a1a2e;
+  --hero-subtitle: #4a5568;
+  --card-bg: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.1);
+  --section-bg: #f8fafc;
+  --section-alt-bg: #ffffff;
+  --accent-glow: rgba(0, 212, 170, 0.15);
+}
+
+[data-theme='dark'] {
+  --hero-bg: linear-gradient(135deg, #0f0f14 0%, #18181f 50%, #1a1a24 100%);
+  --hero-text: #ffffff;
+  --hero-subtitle: #a1a1aa;
+  --card-bg: linear-gradient(180deg, #18181f 0%, #1a1a24 100%);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --section-bg: #0f0f14;
+  --section-alt-bg: #18181f;
+  --accent-glow: rgba(0, 212, 170, 0.2);
+}
 
 /* ================================
    Hero Section
@@ -12,7 +38,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0f0f14 0%, #18181f 50%, #1a1a24 100%);
+  background: var(--hero-bg);
   overflow: hidden;
   padding: 6rem 2rem;
 }
@@ -40,11 +66,17 @@
   right: 0;
   bottom: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
   pointer-events: none;
   opacity: 0.5;
+}
+
+[data-theme='dark'] .heroBanner::after {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 }
 
 /* ================================
@@ -162,7 +194,7 @@
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 1.5rem;
-  color: #ffffff;
+  color: var(--hero-text);
   letter-spacing: -0.02em;
 }
 
@@ -305,7 +337,7 @@
 .heroSubtitle {
   font-size: 1.25rem;
   line-height: 1.7;
-  color: #a1a1aa;
+  color: var(--hero-subtitle);
   margin-bottom: 2rem;
   max-width: 540px;
 }
@@ -595,7 +627,7 @@
    ================================ */
 .highlights {
   padding: 6rem 2rem;
-  background: #0f0f14;
+  background: var(--section-bg);
   position: relative;
 }
 
@@ -613,7 +645,7 @@
   text-align: center;
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--hero-text);
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
@@ -621,7 +653,7 @@
 .sectionSubtitle {
   text-align: center;
   font-size: 1.1rem;
-  color: #71717a;
+  color: var(--hero-subtitle);
   margin-bottom: 3rem;
   max-width: 600px;
   margin-left: auto;
@@ -632,14 +664,15 @@
    Highlight Cards
    ================================ */
 .highlightCard {
-  background: linear-gradient(180deg, #18181f 0%, #1a1a24 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 16px;
   padding: 2rem;
   height: 100%;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .highlightCard::before {
@@ -681,13 +714,13 @@
 .highlightCard h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--hero-text);
   margin-bottom: 0.75rem;
 }
 
 .highlightCard p {
   font-size: 0.95rem;
-  color: #a1a1aa;
+  color: var(--hero-subtitle);
   line-height: 1.6;
   margin: 0;
 }
@@ -713,16 +746,17 @@
    ================================ */
 .featuresSection {
   padding: 6rem 2rem;
-  background: #18181f;
+  background: var(--section-alt-bg);
 }
 
 .featureCard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 1.5rem;
   height: 100%;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .featureCard:hover {
@@ -739,13 +773,13 @@
 .featureCard h3 {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--hero-text);
   margin-bottom: 0.5rem;
 }
 
 .featureCard p {
   font-size: 0.9rem;
-  color: #71717a;
+  color: var(--hero-subtitle);
   line-height: 1.5;
   margin: 0;
 }
@@ -755,7 +789,7 @@
    ================================ */
 .ctaSection {
   padding: 6rem 2rem;
-  background: linear-gradient(135deg, #0f0f14 0%, #18181f 100%);
+  background: var(--hero-bg);
   position: relative;
   overflow: hidden;
 }
@@ -783,14 +817,14 @@
 .ctaContent h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--hero-text);
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
 
 .ctaContent p {
   font-size: 1.15rem;
-  color: #a1a1aa;
+  color: var(--hero-subtitle);
   margin-bottom: 2rem;
   line-height: 1.7;
 }
@@ -1004,9 +1038,9 @@
    ================================ */
 .statsSection {
   padding: 4rem 2rem;
-  background: #0f0f14;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--section-bg);
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
 }
 
 .statsGrid {
@@ -1037,7 +1071,7 @@
 
 .statLabel {
   font-size: 0.9rem;
-  color: #71717a;
+  color: var(--hero-subtitle);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
