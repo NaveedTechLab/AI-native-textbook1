@@ -108,17 +108,20 @@ app.add_middleware(
         "http://localhost:8000",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:3001",
-        # Production URLs
+        # Production URLs - HuggingFace Spaces
         "https://naveed247365-ai-textbook-frontend.hf.space",
+        "https://naveed247365-ai-native-textbook.hf.space",
+        "https://huggingface.co",
+        # Vercel
         "https://ai-native-textbook.vercel.app",
-        # OAuth providers
-        "https://accounts.google.com",
-        "https://www.facebook.com",
+        # Allow all HuggingFace subdomains
+        "https://*.hf.space",
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
     expose_headers=["*"],
+    allow_origin_regex=r"https://.*\.hf\.space",
 )
 
 # Include API routers
