@@ -114,13 +114,12 @@ app.add_middleware(
         "https://huggingface.co",
         # Vercel
         "https://ai-native-textbook.vercel.app",
-        # Allow all HuggingFace subdomains
-        "https://*.hf.space",
     ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
     allow_headers=["*"],
     expose_headers=["*"],
+    # Regex pattern to allow all HuggingFace subdomains
     allow_origin_regex=r"https://.*\.hf\.space",
 )
 
