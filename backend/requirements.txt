@@ -13,3 +13,5 @@ asyncpg==0.29.0
 httpx==0.26.0
 alembic==1.13.1
 psycopg2-binary
+PyJWT[crypto]==2.9.0
+openai-chatkit

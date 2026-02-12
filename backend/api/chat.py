@@ -1,6 +1,9 @@
 import os
 import sys
-from fastapi import APIRouter, Depends, HTTPException, Header
+import time
+from uuid import uuid4
+from fastapi import APIRouter, Depends, HTTPException, Header, Request
+from fastapi.responses import JSONResponse
 import logging
 from qdrant_client import QdrantClient
 
@@ -105,3 +108,83 @@ async def chat(payload: dict, user_data: dict = Depends(verify_jwt_token)):
         result["setup_needed"] = "Please configure a valid OPENROUTER_API_KEY in the .env file to enable AI responses"
 
     return result
+
+
+# ============================================================
+# OpenAI ChatKit SDK Compatible Endpoint
+# Provides OpenAI Chat Completions API format for ChatKit React
+# ============================================================
+
+@router.post("/chatkit/session")
+async def chatkit_session(request: Request, user_data: dict = Depends(verify_jwt_token)):
+    """
+    Create a ChatKit session. Returns a client_secret for the ChatKit React component.
+    This is a simplified session endpoint for self-hosted ChatKit.
+    """
+    session_id = str(uuid4())
+    return {
+        "client_secret": f"chatkit_{session_id}_{user_data['user_id']}",
+        "session_id": session_id,
+        "user_id": user_data["user_id"],
+    }
+
+
+@router.post("/chatkit/chat")
+async def chatkit_chat(payload: dict, user_data: dict = Depends(verify_jwt_token)):
+    """
+    ChatKit-compatible chat endpoint.
+    Accepts OpenAI Chat Completions format and routes through RAG service.
+    Used by the @openai/chatkit-react frontend component.
+    """
+    messages = payload.get("messages", [])
+    selected_text = payload.get("selected_text", "")
+
+    # Extract the last user message
+    user_msg = ""
+    for msg in reversed(messages):
+        if msg.get("role") == "user":
+            user_msg = msg.get("content", "")
+            break
+
+    if not user_msg:
+        user_msg = payload.get("message", "")
+
+    # Process through RAG service
+    answer = ""
+    if selected_text and rag_service:
+        try:
+            answer = rag_service.query_rag(selected_text, user_msg)
+        except Exception as e:
+            logger.error(f"ChatKit RAG service failed: {str(e)}")
+            answer = "Is sawal ka jawab provided data me mojood nahi hai."
+    elif rag_service:
+        try:
+            answer = rag_service.query_rag(user_msg, user_msg)
+        except Exception as e:
+            logger.error(f"ChatKit RAG service failed: {str(e)}")
+            answer = "Please select text from the textbook to ask questions."
+    else:
+        answer = "AI service is not configured. Please set up OPENROUTER_API_KEY."
+
+    # Return in OpenAI Chat Completions format (ChatKit compatible)
+    return {
+        "id": f"chatcmpl-{uuid4().hex[:12]}",
+        "object": "chat.completion",
+        "created": int(time.time()),
+        "model": "openai/gpt-3.5-turbo",
+        "choices": [
+            {
+                "index": 0,
+                "message": {
+                    "role": "assistant",
+                    "content": answer,
+                },
+                "finish_reason": "stop",
+            }
+        ],
+        "usage": {
+            "prompt_tokens": len(user_msg.split()),
+            "completion_tokens": len(answer.split()),
+            "total_tokens": len(user_msg.split()) + len(answer.split()),
+        },
+    }

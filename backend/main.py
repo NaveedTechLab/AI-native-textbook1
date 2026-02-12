@@ -66,7 +66,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "style-src 'self' 'unsafe-inline'; "
             "img-src 'self' data: https:; "
             "font-src 'self' data:; "
-            "connect-src 'self' https://openrouter.ai; "
+            "connect-src 'self' https://openrouter.ai http://localhost:3100 http://auth-service:3100; "
             "frame-ancestors 'none'; "
             "base-uri 'self'; "
             "form-action 'self'"
@@ -108,6 +108,9 @@ app.add_middleware(
         "http://localhost:8000",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:3001",
+        # Better-Auth service
+        "http://localhost:3100",
+        "http://auth-service:3100",
         # Production URLs - HuggingFace Spaces
         "https://naveed247365-ai-textbook-frontend.hf.space",
         "https://naveed247365-ai-native-textbook.hf.space",

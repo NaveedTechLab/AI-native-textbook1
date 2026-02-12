@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Layout from '@theme/Layout';
 import { useHistory } from '@docusaurus/router';
-
-// API Base URL
-const API_BASE = typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
-  ? 'https://naveed247365-ai-textbook-backend.hf.space/api'
-  : 'http://localhost:8001/api';
-
-// Google OAuth Client ID (replace with your own)
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+import { signInWithEmail, signInWithGoogle } from '../services/authClient';
 
 export default function LoginPage() {
   const history = useHistory();
@@ -19,42 +12,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(null);
-
-  // Load Google OAuth SDK
-  useEffect(() => {
-    // Load Google SDK
-    const loadGoogleSDK = () => {
-      if (document.getElementById('google-sdk')) return;
-      const script = document.createElement('script');
-      script.id = 'google-sdk';
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    };
-
-    // Load Facebook SDK
-    const loadFacebookSDK = () => {
-      if (document.getElementById('facebook-sdk')) return;
-      window.fbAsyncInit = function() {
-        window.FB.init({
-          appId: 'YOUR_FACEBOOK_APP_ID', // Replace with your Facebook App ID
-          cookie: true,
-          xfbml: true,
-          version: 'v18.0'
-        });
-      };
-      const script = document.createElement('script');
-      script.id = 'facebook-sdk';
-      script.src = 'https://connect.facebook.net/en_US/sdk.js';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    };
-
-    loadGoogleSDK();
-    loadFacebookSDK();
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,31 +27,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.detail || 'Login failed');
-      }
-
-      // Store JWT token and email
-      localStorage.setItem('user_token', data.access_token);
-      localStorage.setItem('user_email', data.email || formData.email);
-
-      // Dispatch auth change event for navbar update
-      window.dispatchEvent(new Event('authChange'));
-
-      // Redirect to docs
+      await signInWithEmail(formData.email, formData.password);
       history.push('/docs/intro');
     } catch (err) {
       console.error('Login error:', err);
@@ -109,89 +42,11 @@ export default function LoginPage() {
     setError('');
 
     try {
-      // Use Google Identity Services
-      if (window.google && window.google.accounts) {
-        window.google.accounts.oauth2.initTokenClient({
-          client_id: GOOGLE_CLIENT_ID,
-          scope: 'email profile',
-          callback: async (response) => {
-            if (response.access_token) {
-              await handleOAuthCallback('google', response.access_token);
-            } else {
-              setError('Google login failed');
-              setOauthLoading(null);
-            }
-          },
-        }).requestAccessToken();
-      } else {
-        // Fallback: Show manual instructions
-        setError('Google SDK not loaded. Please try again or use email login.');
-        setOauthLoading(null);
-      }
+      await signInWithGoogle();
+      // Better-Auth handles the redirect flow for OAuth
     } catch (err) {
       console.error('Google login error:', err);
       setError('Google login failed. Please try again.');
-      setOauthLoading(null);
-    }
-  };
-
-  const handleFacebookLogin = async () => {
-    setOauthLoading('facebook');
-    setError('');
-
-    try {
-      if (window.FB) {
-        window.FB.login(async (response) => {
-          if (response.authResponse) {
-            await handleOAuthCallback('facebook', response.authResponse.accessToken);
-          } else {
-            setError('Facebook login cancelled');
-            setOauthLoading(null);
-          }
-        }, { scope: 'email,public_profile' });
-      } else {
-        setError('Facebook SDK not loaded. Please try again or use email login.');
-        setOauthLoading(null);
-      }
-    } catch (err) {
-      console.error('Facebook login error:', err);
-      setError('Facebook login failed. Please try again.');
-      setOauthLoading(null);
-    }
-  };
-
-  const handleOAuthCallback = async (provider, accessToken) => {
-    try {
-      const response = await fetch(`${API_BASE}/auth/oauth`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          provider: provider,
-          access_token: accessToken
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.detail || `${provider} login failed`);
-      }
-
-      // Store JWT token and email
-      localStorage.setItem('user_token', data.access_token);
-      localStorage.setItem('user_email', data.email);
-
-      // Dispatch auth change event
-      window.dispatchEvent(new Event('authChange'));
-
-      // Redirect to docs
-      history.push('/docs/intro');
-    } catch (err) {
-      console.error(`${provider} OAuth error:`, err);
-      setError(err.message || `${provider} login failed`);
-    } finally {
       setOauthLoading(null);
     }
   };
@@ -422,17 +277,7 @@ export default function LoginPage() {
               {oauthLoading === 'google' ? 'Signing in...' : 'Continue with Google'}
             </button>
 
-            <button
-              type="button"
-              onClick={handleFacebookLogin}
-              disabled={oauthLoading === 'facebook'}
-              className="oauth-button facebook-button"
-            >
-              <svg className="oauth-icon" viewBox="0 0 24 24" fill="white">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-              {oauthLoading === 'facebook' ? 'Signing in...' : 'Continue with Facebook'}
-            </button>
+            {/* Facebook OAuth removed - Better-Auth handles OAuth providers server-side */}
           </div>
 
           <div className="divider">or sign in with email</div>

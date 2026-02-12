@@ -1,0 +1,25 @@
+{
+  "name": "auth-service",
+  "version": "1.0.0",
+  "description": "Better-Auth authentication service for AI-native textbook",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:migrate": "npx @better-auth/cli migrate",
+    "db:generate": "npx @better-auth/cli generate"
+  },
+  "dependencies": {
+    "better-auth": "^1.4.0",
+    "@hono/node-server": "^1.13.0",
+    "hono": "^4.6.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

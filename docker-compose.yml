@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  # Frontend - Docusaurus static site served via nginx
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:7860"
+    depends_on:
+      - backend
+      - auth-service
+    environment:
+      - NODE_ENV=production
+
+  # Backend - FastAPI with RAG, translation, personalization
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8001:7860"
+    env_file:
+      - ./backend/.env
+    environment:
+      - BETTER_AUTH_URL=http://auth-service:3100
+    depends_on:
+      - auth-service
+
+  # Auth Service - Better-Auth (Node.js/Hono)
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "3100:3100"
+    env_file:
+      - ./auth-service/.env
+    environment:
+      - BETTER_AUTH_URL=http://auth-service:3100
+      - PORT=3100

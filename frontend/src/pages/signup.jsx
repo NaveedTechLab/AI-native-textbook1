@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Layout from '@theme/Layout';
 import { useHistory } from '@docusaurus/router';
-
-// API Base URL
-const API_BASE = typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
-  ? 'https://naveed247365-ai-textbook-backend.hf.space/api'
-  : 'http://localhost:8001/api';
-
-// Google OAuth Client ID (replace with your own)
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+import { signUpWithEmail, signInWithGoogle } from '../services/authClient';
 
 export default function SignupPage() {
   const history = useHistory();
@@ -24,43 +17,7 @@ export default function SignupPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(null);
-  const [oauthUser, setOauthUser] = useState(null); // For OAuth users to complete profile
-
-  // Load OAuth SDKs
-  useEffect(() => {
-    // Load Google SDK
-    const loadGoogleSDK = () => {
-      if (document.getElementById('google-sdk')) return;
-      const script = document.createElement('script');
-      script.id = 'google-sdk';
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    };
-
-    // Load Facebook SDK
-    const loadFacebookSDK = () => {
-      if (document.getElementById('facebook-sdk')) return;
-      window.fbAsyncInit = function() {
-        window.FB.init({
-          appId: 'YOUR_FACEBOOK_APP_ID',
-          cookie: true,
-          xfbml: true,
-          version: 'v18.0'
-        });
-      };
-      const script = document.createElement('script');
-      script.id = 'facebook-sdk';
-      script.src = 'https://connect.facebook.net/en_US/sdk.js';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    };
-
-    loadGoogleSDK();
-    loadFacebookSDK();
-  }, []);
+  const [oauthUser, setOauthUser] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -131,71 +88,15 @@ export default function SignupPage() {
     setErrors({});
 
     try {
-      const payload = {
-        email: oauthUser ? oauthUser.email : formData.email,
-        password: oauthUser ? 'oauth_user_no_password' : formData.password,
-        software_background: formData.softwareBackground,
-        hardware_background: formData.hardwareBackground,
-        experience_level: formData.experienceLevel
-      };
-
-      // If OAuth user, use the OAuth endpoint
-      if (oauthUser) {
-        // First authenticate via OAuth
-        const oauthResponse = await fetch(`${API_BASE}/auth/oauth`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            provider: oauthUser.provider,
-            access_token: oauthUser.accessToken
-          }),
-        });
-
-        const oauthData = await oauthResponse.json();
-
-        if (!oauthResponse.ok) {
-          throw new Error(oauthData.detail || 'OAuth signup failed');
-        }
-
-        // Then update profile
-        const profileResponse = await fetch(`${API_BASE}/auth/profile`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${oauthData.access_token}`
-          },
-          body: JSON.stringify({
-            software_background: formData.softwareBackground,
-            hardware_background: formData.hardwareBackground,
-            experience_level: formData.experienceLevel
-          }),
-        });
-
-        localStorage.setItem('user_token', oauthData.access_token);
-        localStorage.setItem('user_email', oauthData.email);
-      } else {
-        // Regular email signup
-        const response = await fetch(`${API_BASE}/auth/signup`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          const errorMsg = typeof data.detail === 'string'
-            ? data.detail
-            : (data.detail?.[0]?.msg || JSON.stringify(data.detail) || 'Signup failed');
-          throw new Error(errorMsg);
-        }
-
-        localStorage.setItem('user_token', data.access_token);
-        localStorage.setItem('user_email', data.email || formData.email);
-      }
-
-      // Dispatch auth change event
-      window.dispatchEvent(new Event('authChange'));
+      // Use Better-Auth signUp with custom fields
+      await signUpWithEmail({
+        email: formData.email,
+        password: formData.password,
+        name: formData.email.split('@')[0], // Use email prefix as name
+        softwareBackground: formData.softwareBackground,
+        hardwareBackground: formData.hardwareBackground,
+        experienceLevel: formData.experienceLevel,
+      });
 
       // Redirect to docs
       history.push('/docs/intro');
@@ -212,59 +113,11 @@ export default function SignupPage() {
     setErrors({});
 
     try {
-      if (window.google && window.google.accounts) {
-        window.google.accounts.oauth2.initTokenClient({
-          client_id: GOOGLE_CLIENT_ID,
-          scope: 'email profile',
-          callback: (response) => {
-            if (response.access_token) {
-              setOauthUser({
-                provider: 'google',
-                accessToken: response.access_token
-              });
-              setStep(2); // Go to profile step
-            } else {
-              setErrors({ submit: 'Google signup failed' });
-            }
-            setOauthLoading(null);
-          },
-        }).requestAccessToken();
-      } else {
-        setErrors({ submit: 'Google SDK not loaded. Please try again or use email.' });
-        setOauthLoading(null);
-      }
+      // Better-Auth handles the Google OAuth redirect flow
+      await signInWithGoogle();
     } catch (err) {
       console.error('Google signup error:', err);
       setErrors({ submit: 'Google signup failed. Please try again.' });
-      setOauthLoading(null);
-    }
-  };
-
-  const handleFacebookSignup = async () => {
-    setOauthLoading('facebook');
-    setErrors({});
-
-    try {
-      if (window.FB) {
-        window.FB.login((response) => {
-          if (response.authResponse) {
-            setOauthUser({
-              provider: 'facebook',
-              accessToken: response.authResponse.accessToken
-            });
-            setStep(2); // Go to profile step
-          } else {
-            setErrors({ submit: 'Facebook signup cancelled' });
-          }
-          setOauthLoading(null);
-        }, { scope: 'email,public_profile' });
-      } else {
-        setErrors({ submit: 'Facebook SDK not loaded. Please try again or use email.' });
-        setOauthLoading(null);
-      }
-    } catch (err) {
-      console.error('Facebook signup error:', err);
-      setErrors({ submit: 'Facebook signup failed. Please try again.' });
       setOauthLoading(null);
     }
   };
@@ -569,17 +422,7 @@ export default function SignupPage() {
                   {oauthLoading === 'google' ? 'Connecting...' : 'Continue with Google'}
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleFacebookSignup}
-                  disabled={oauthLoading === 'facebook'}
-                  className="oauth-button facebook-button"
-                >
-                  <svg className="oauth-icon" viewBox="0 0 24 24" fill="white">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                  {oauthLoading === 'facebook' ? 'Connecting...' : 'Continue with Facebook'}
-                </button>
+                {/* Facebook OAuth removed - Better-Auth handles OAuth providers server-side */}
               </div>
 
               <div className="divider">or sign up with email</div>

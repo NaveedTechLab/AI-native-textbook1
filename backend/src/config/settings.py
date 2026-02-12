@@ -14,8 +14,9 @@ class Settings(BaseSettings):
     qdrant_url: str
     qdrant_api_key: Optional[str] = None
 
-    # Gemini API settings
-    gemini_api_key: str
+    # OpenAI/OpenRouter API settings
+    openai_api_key: str
+    openai_base_url: str = "https://openrouter.ai/api/v1"
 
     # JWT settings
     secret_key: str
@@ -36,7 +37,7 @@ class Settings(BaseSettings):
     server_host: str = "0.0.0.0"
     server_port: int = 8000
 
-    @field_validator('neon_db_url', 'qdrant_url', 'gemini_api_key', 'secret_key')
+    @field_validator('neon_db_url', 'qdrant_url', 'openai_api_key', 'secret_key')
     @classmethod
     def validate_required_fields(cls, v, info):
         if not v:

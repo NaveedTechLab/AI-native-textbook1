@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '@theme-original/Layout';
-import EnhancedChatbot from '@site/src/components/chatbot/EnhancedChatbot';
+import ChatKitWidget from '@site/src/components/chatbot/ChatKitWidget';
 import TextSelectionHandler from '@site/src/components/chatbot/TextSelectionHandler';
 
 export default function LayoutWrapper(props) {
@@ -10,7 +10,7 @@ export default function LayoutWrapper(props) {
         <>
           <Layout {...props}>
             {props.children}
-            <EnhancedChatbot selectedText={selectedText} onTextSelected={clearSelection} />
+            <ChatKitWidget selectedText={selectedText} onTextSelected={clearSelection} />
           </Layout>
         </>
       )}

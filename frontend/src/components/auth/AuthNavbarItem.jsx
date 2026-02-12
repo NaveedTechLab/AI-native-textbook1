@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from '@docusaurus/router';
+import { logOut, getAuthToken } from '../../services/authClient';
 
-// API Base URL
+// API Base URL (for profile fetch - still uses FastAPI backend)
 const API_BASE = typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
   ? 'https://naveed247365-ai-textbook-backend.hf.space/api'
   : 'http://localhost:8001/api';
@@ -82,9 +83,9 @@ const AuthNavbarItem = () => {
     };
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('user_token');
-    localStorage.removeItem('user_email');
+  const handleLogout = async () => {
+    // Use Better-Auth signOut (clears session + localStorage)
+    await logOut();
     localStorage.removeItem('user_id');
     localStorage.removeItem('user_name');
     localStorage.removeItem('user_picture');
@@ -93,9 +94,6 @@ const AuthNavbarItem = () => {
     setUserName('');
     setProfilePicture('');
     setShowDropdown(false);
-
-    // Dispatch custom event for other components
-    window.dispatchEvent(new Event('authChange'));
 
     // Redirect to home
     history.push('/');
